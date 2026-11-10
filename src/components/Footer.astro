@@ -1,0 +1,32 @@
+---
+import { links } from '../data/links';
+import { ui } from '../i18n/ui';
+import { localePath, type Locale } from '../lib/paths';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = ui(locale);
+const external = [
+  [links.github, 'GitHub'],
+  [links.linkedin, 'LinkedIn'],
+  [links.x, 'X'],
+] as const;
+---
+
+<footer class="site-footer">
+  <div class="wrap footer-row">
+    {
+      external.map(([href, label]) => (
+        <a href={href} target="_blank" rel="me noopener noreferrer">
+          {label}
+          <span class="sr-only"> ({t.newTab})</span>
+        </a>
+      ))
+    }
+    <a href={`mailto:${links.email}`}>{links.email}</a>
+    <a href={localePath(locale, '/rss.xml')}>{t.rss}</a>
+    <p class="copyright">{t.footer}</p>
+  </div>
+</footer>

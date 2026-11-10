@@ -1,0 +1,170 @@
+{
+  "en": {
+    "about": [
+      "I am an undergraduate in Computer Engineering at the University of Michigan, Ann Arbor. I came to Michigan through the UM–SJTU Joint Institute dual degree program, having studied Electrical and Computer Engineering at Shanghai Jiao Tong University from 2024 to 2026.",
+      "My interests are digital IC design, hardware verification, and computer architecture—from transistor-level circuit design to ISA toolchains and pipeline models. In Prof. Zetian Mi’s group at Michigan, I am reviewing deep learning approaches for interpreting in-situ RHEED images during GaN molecular beam epitaxy, and developing a research plan that connects image features to surface evolution during growth."
+    ],
+    "honors": [
+      [
+        "Successful Participant, MCM/ICM",
+        "January 2026"
+      ],
+      [
+        "Best Buddy Award, M-ENGIN Leadership Program",
+        "March 2025"
+      ],
+      [
+        "Bronze Medal, University Physics Competition",
+        "January 2025"
+      ],
+      [
+        "Second Prize, Chinese Physics Olympiad, Shanghai Region",
+        "November 2023"
+      ]
+    ],
+    "education": [
+      [
+        "University of Michigan, Ann Arbor",
+        "Computer Engineering (BSE)",
+        "Expected graduation 2028",
+        "Transferred through the UM–SJTU Joint Institute dual degree program."
+      ],
+      [
+        "Shanghai Jiao Tong University",
+        "Electrical and Computer Engineering",
+        "2024–2026",
+        "UM–SJTU Joint Institute dual degree program."
+      ],
+      [
+        "University of Navarra, Spain",
+        "Winter academic exchange",
+        "January–February 2025",
+        "Included Java game design."
+      ]
+    ],
+    "teaching": [
+      [
+        "Teaching Assistant, Academic Writing",
+        "Shanghai Jiao Tong University",
+        "September–December 2025",
+        "Supported 50+ students as a teaching assistant for Academic Writing."
+      ],
+      [
+        "International Exchange Mentor",
+        "SJTU Global College International Program Office",
+        "From March 2025",
+        ""
+      ]
+    ],
+    "skills": {
+      "programming": [
+        "C",
+        "C++",
+        "Python",
+        "SystemVerilog",
+        "MATLAB",
+        "Java"
+      ],
+      "tools": [
+        "Cadence",
+        "Vivado",
+        "Git",
+        "Linux/Unix",
+        "Arduino IDE",
+        "Proteus",
+        "Stata",
+        "LaTeX"
+      ],
+      "languages": [
+        "Chinese (native)",
+        "English (fluent)",
+        "Spanish (elementary)"
+      ]
+    },
+    "contact": "The best way to reach me is email. I am based in Ann Arbor, MI."
+  },
+  "zh": {
+    "about": [
+      "我是密歇根大学安娜堡分校计算机工程专业的本科生。经 UM–SJTU 联合学院（交大密西根学院）双学位项目来到密歇根，此前于 2024 至 2026 年在上海交通大学学习电子与计算机工程。",
+      "我的兴趣集中在数字集成电路设计、硬件验证与计算机体系结构——从晶体管级电路设计，到指令集工具链与流水线模型。在密歇根大学 Zetian Mi 教授课题组，我正在调研用深度学习方法解读 GaN 分子束外延过程中的原位 RHEED 图像，并制定将图像特征与生长过程中表面演化联系起来的研究计划。"
+    ],
+    "honors": [
+      [
+        "MCM/ICM 成功参赛奖",
+        "2026年1月"
+      ],
+      [
+        "M-ENGIN 领导力项目 Best Buddy Award",
+        "2025年3月"
+      ],
+      [
+        "University Physics Competition 铜奖",
+        "2025年1月"
+      ],
+      [
+        "全国中学生物理竞赛上海赛区二等奖",
+        "2023年11月"
+      ]
+    ],
+    "education": [
+      [
+        "密歇根大学安娜堡分校",
+        "计算机工程（BSE）",
+        "预计 2028 年毕业",
+        "经 UM–SJTU 联合学院（交大密西根学院）双学位项目转学至此。"
+      ],
+      [
+        "上海交通大学",
+        "电子与计算机工程",
+        "2024–2026",
+        "UM–SJTU 联合学院（交大密西根学院）双学位项目。"
+      ],
+      [
+        "西班牙纳瓦拉大学",
+        "冬季学期学术交流",
+        "2025年1–2月",
+        "包含 Java 游戏设计。"
+      ]
+    ],
+    "teaching": [
+      [
+        "学术写作课程助教",
+        "上海交通大学",
+        "2025年9–12月",
+        "担任学术写作课程助教，为 50 余名学生提供支持。"
+      ],
+      [
+        "国际交流导师",
+        "上海交通大学全球学院国际项目办公室",
+        "2025年3月起",
+        ""
+      ]
+    ],
+    "skills": {
+      "programming": [
+        "C",
+        "C++",
+        "Python",
+        "SystemVerilog",
+        "MATLAB",
+        "Java"
+      ],
+      "tools": [
+        "Cadence",
+        "Vivado",
+        "Git",
+        "Linux/Unix",
+        "Arduino IDE",
+        "Proteus",
+        "Stata",
+        "LaTeX"
+      ],
+      "languages": [
+        "中文（母语）",
+        "英语（流利）",
+        "西班牙语（初级）"
+      ]
+    },
+    "contact": "联系我最好通过电子邮件。我目前在密歇根州安娜堡。"
+  }
+}

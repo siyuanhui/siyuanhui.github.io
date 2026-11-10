@@ -1,0 +1,59 @@
+---
+import { render } from 'astro:content';
+import Entry from '../layouts/Entry.astro';
+import { findLocalized, loadCollection, relatedOf } from '../lib/content';
+import { ui } from '../i18n/ui';
+import { readingMinutes } from '../lib/reading';
+import { localePath, type Locale } from '../lib/paths';
+
+interface Props {
+  locale: Locale;
+  slug: string;
+  collection: 'projects' | 'research';
+}
+
+const { locale, slug, collection } = Astro.props;
+const found = await findLocalized(collection, slug, locale);
+if (!found) throw new Error(`Missing ${collection}:${slug}`);
+const { entry, fallback } = found;
+const { Content, headings } = await render(entry);
+const t = ui(locale);
+const all = await loadCollection(collection);
+const related = relatedOf(all, entry, locale).map((item) => ({
+  href: localePath(locale, `/${collection}/${item.entry.data.translationKey}/`),
+  title: item.entry.data.title,
+  meta: item.entry.data.period,
+}));
+const rows = [
+  entry.data.role ? { label: t.role, value: entry.data.role } : undefined,
+  { label: t.timeframe, value: entry.data.period },
+  entry.data.tools ? { label: t.tools, value: entry.data.tools } : undefined,
+  entry.data.course ? { label: t.course, value: entry.data.course } : undefined,
+  entry.data.status === 'in-progress' ? { label: t.status, value: t.inProgress } : undefined,
+].filter((row): row is { label: string; value: string } => Boolean(row));
+const links = entry.data.github
+  ? [{ label: t.github, href: entry.data.github, text: entry.data.github.replace(/^https?:\/\//, '') }]
+  : [];
+const minutes = readingMinutes(entry.body);
+---
+
+<Entry
+  locale={locale}
+  title={entry.data.title}
+  description={entry.data.description}
+  unlocalizedPath={`/${collection}/${entry.data.translationKey}/`}
+  kicker={collection === 'projects' ? t.projects : t.research}
+  meta={t.minRead(minutes)}
+  rows={rows}
+  links={links}
+  facts={entry.data.facts}
+  notice={fallback ? t.untranslated : undefined}
+  draft={entry.data.draft}
+  headings={headings}
+  related={related}
+  contentLanguage={entry.data.language}
+  published={entry.data.date}
+  variant="technical"
+>
+  <Content />
+</Entry>

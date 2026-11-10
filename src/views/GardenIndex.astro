@@ -1,0 +1,59 @@
+---
+import Base from '../layouts/Base.astro';
+import { topics } from '../data/topics';
+import { featuredFirst, loadCollection, localize } from '../lib/content';
+import { ui } from '../i18n/ui';
+import { localePath, type Locale } from '../lib/paths';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const t = ui(locale);
+const notes = featuredFirst(localize(await loadCollection('garden'), locale).map((item) => item.entry));
+const grouped = topics
+  .map((topic) => ({ topic, notes: notes.filter((note) => note.data.topic === topic.id) }))
+  .filter((group) => group.notes.length > 0);
+---
+
+<Base locale={locale} title={t.pageTitle(t.garden)} description={t.gardenIntro} unlocalizedPath="/garden/">
+  <header class="page-header wrap">
+    <h1>{t.garden}</h1>
+    <p class="lede">{t.gardenIntro}</p>
+    <p class="more"><a href={localePath(locale, '/garden/courses/')}>{t.courseworkArchive}</a></p>
+  </header>
+  <div class="wrap" style="padding-bottom: 3.5rem;">
+    {
+      notes.length === 0 ? (
+        <>
+          <p>{t.noNotes}</p>
+          <ul class="topic-line">
+            {topics.map((topic) => (
+              <li><span>{locale === 'zh' ? topic.zh : topic.en}</span></li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        grouped.map((group) => (
+          <section id={group.topic.id} style="margin-top: 2rem;">
+            <h2>{locale === 'zh' ? group.topic.zh : group.topic.en}</h2>
+            <ol class="plain-list">
+              {group.notes.map((note) => (
+                <li>
+                  <p class="meta">{t[note.data.status]} · {note.data.tags.join(' · ')}</p>
+                  <h3><a href={localePath(locale, `/garden/${note.data.translationKey}/`)}>{note.data.title}</a></h3>
+                  <p>{note.data.description}</p>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ))
+      )
+    }
+    {
+      import.meta.env.DEV && (
+        <p class="notice" style="margin-top: 2rem;">
+          <a href={localePath(locale, '/garden/template-technical-note/')}>template-technical-note</a>
+        </p>
+      )
+    }
+  </div>
+</Base>

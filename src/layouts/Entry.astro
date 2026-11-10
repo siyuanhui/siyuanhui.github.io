@@ -1,0 +1,162 @@
+---
+import type { MarkdownHeading } from 'astro';
+import Base from './Base.astro';
+import { ui } from '../i18n/ui';
+import { contentLang, type Locale } from '../lib/paths';
+
+interface Row {
+  label: string;
+  value: string;
+}
+interface Related {
+  href: string;
+  title: string;
+  meta?: string;
+}
+interface LinkRow {
+  label: string;
+  href: string;
+  text: string;
+}
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  unlocalizedPath: string;
+  kicker?: string;
+  lede?: string;
+  meta?: string;
+  rows?: Row[];
+  links?: LinkRow[];
+  facts?: string[];
+  notice?: string;
+  draft?: boolean;
+  headings?: MarkdownHeading[];
+  related?: Related[];
+  contentLanguage?: string;
+  published?: Date;
+  pdf?: { href: string; label: string } | null;
+  audio?: string;
+  variant?: 'technical' | 'editorial';
+}
+
+const {
+  locale,
+  title,
+  description,
+  unlocalizedPath,
+  kicker,
+  lede,
+  meta,
+  rows = [],
+  links = [],
+  facts = [],
+  notice,
+  draft = false,
+  headings = [],
+  related = [],
+  contentLanguage = locale,
+  published,
+  pdf = null,
+  audio,
+  variant = 'editorial',
+} = Astro.props;
+const t = ui(locale);
+const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+const showToc = toc.length >= 2;
+const pageTitle = t.pageTitle(title);
+---
+
+<Base
+  locale={locale}
+  title={pageTitle}
+  description={description}
+  unlocalizedPath={unlocalizedPath}
+  ogType="article"
+  published={published}
+  noindex={draft}
+>
+  <article class="wrap" style="padding-bottom: 3.5rem;">
+    <header class="page-header">
+      {kicker && <p class="kicker">{kicker}</p>}
+      <h1>{title}</h1>
+      {lede && <p class="lede">{lede}</p>}
+      {meta && <p class="meta">{meta}</p>}
+      {
+        rows.length > 0 && (
+          <dl class="summary">
+            {rows.map((row) => (
+              <div>
+                <dt>{row.label}</dt>
+                <dd>{row.value}</dd>
+              </div>
+            ))}
+            {links.map((link) => (
+              <div>
+                <dt>{link.label}</dt>
+                <dd>
+                  <a href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}>
+                    {link.text}
+                  </a>
+                </dd>
+              </div>
+            ))}
+          </dl>
+        )
+      }
+      {
+        facts.length > 0 && (
+          <>
+            <p class="kicker" style="margin-top: 1.3rem;">{t.keyFacts}</p>
+            <ul class="facts">
+              {facts.map((fact) => (
+                <li>{fact}</li>
+              ))}
+            </ul>
+          </>
+        )
+      }
+    </header>
+    {draft && <p class="draft-banner">{t.draftBanner}</p>}
+    {notice && <p class="notice">{notice}</p>}
+    <div class:list={['article-grid', { solo: !showToc }]}>
+      <div class:list={['prose', variant === 'editorial' ? 'prose-editorial' : 'prose-technical']} lang={contentLang(contentLanguage)}>
+        <slot />
+        {audio && <audio controls preload="none" src={audio}><span class="sr-only">{t.audio}</span></audio>}
+        {pdf && (
+          <p class="more"><a href={pdf.href} download>{pdf.label}</a></p>
+        )}
+      </div>
+      {
+        showToc && (
+          <nav class="toc" aria-label={t.onThisPage}>
+            <p>{t.onThisPage}</p>
+            <ol>
+              {toc.map((heading) => (
+                <li class={heading.depth === 3 ? 'toc-sub' : undefined}>
+                  <a href={`#${heading.slug}`}>{heading.text}</a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )
+      }
+    </div>
+    {
+      related.length > 0 && (
+        <section style="margin-top: 2.5rem;">
+          <h2>{t.related}</h2>
+          <ul class="plain-list">
+            {related.map((item) => (
+              <li>
+                {item.meta && <p class="meta">{item.meta}</p>}
+                <h3><a href={item.href}>{item.title}</a></h3>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </article>
+</Base>

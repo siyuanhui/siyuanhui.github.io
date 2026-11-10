@@ -1,0 +1,9 @@
+---
+import { staticPaths } from '../../../lib/content';
+import View from '../../../views/Writing.astro';
+export async function getStaticPaths() {
+  return staticPaths('journal');
+}
+const { slug } = Astro.params;
+---
+<View locale="zh" slug={slug!} collection="journal" />

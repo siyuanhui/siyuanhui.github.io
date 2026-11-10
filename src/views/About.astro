@@ -1,0 +1,105 @@
+---
+import Base from '../layouts/Base.astro';
+import { links } from '../data/links';
+import { courses } from '../data/courses';
+import profile from '../data/profile.json';
+import { ui } from '../i18n/ui';
+import { localePath, type Locale } from '../lib/paths';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const t = ui(locale);
+const bio = profile[locale];
+const skillGroups = [
+  [t.programming, bio.skills.programming],
+  [t.toolsLabel, bio.skills.tools],
+  [t.languages, bio.skills.languages],
+] as const;
+---
+
+<Base locale={locale} title={t.pageTitle(t.about)} description={bio.about[0]} unlocalizedPath="/about/">
+  <article class="wrap" style="padding-bottom: 3.5rem;">
+    <header class="page-header">
+      <h1>{t.about}</h1>
+    </header>
+    <div class="prose prose-editorial" style="max-width: 42rem;">
+      {bio.about.map((paragraph) => <p>{paragraph}</p>)}
+      <p><a href={localePath(locale, '/now/')}>{t.fullNow}</a></p>
+    </div>
+
+    <section id="education" style="margin-top: 2.5rem;">
+      <h2>{t.education}</h2>
+      {
+        bio.education.map(([name, role, dates, note]) => (
+          <article class="edu">
+            <div class="edu-head">
+              <h3>{name}</h3>
+              <p class="when">{dates}</p>
+            </div>
+            <p class="meta">{role}</p>
+            <p>{note}</p>
+          </article>
+        ))
+      }
+      <h3 class="group-label">{t.relevantCoursework}</h3>
+      <ul>
+        {courses.filter((course) => !course.progress).map((course) => <li>{locale === 'zh' ? course.zh : course.en}</li>)}
+      </ul>
+      <h3 class="group-label">{t.inProgressHeading}</h3>
+      <ul>
+        {courses.filter((course) => course.progress).map((course) => <li>{locale === 'zh' ? course.zh : course.en}</li>)}
+      </ul>
+      <p class="more"><a href={localePath(locale, '/garden/courses/')}>{t.courseworkArchive}</a></p>
+    </section>
+
+    <section id="honors" style="margin-top: 2.5rem;">
+      <h2>{t.honors}</h2>
+      <ul class="plain-list">
+        {bio.honors.map(([text, date]) => (
+          <li class="honor">
+            <span>{text}</span>
+            <span class="when">{date}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section id="teaching" style="margin-top: 2.5rem;">
+      <h2>{t.teaching}</h2>
+      {
+        bio.teaching.map(([title, role, period, body]) => (
+          <article class="edu">
+            <div class="edu-head">
+              <h3>{title}</h3>
+              <p class="when">{period}</p>
+            </div>
+            <p class="meta">{role}</p>
+            {body && <p>{body}</p>}
+          </article>
+        ))
+      }
+    </section>
+
+    <section id="skills" style="margin-top: 2.5rem;">
+      <h2>{t.skills}</h2>
+      {skillGroups.map(([label, items]) => (
+        <div class="skill-block">
+          <h3>{label}</h3>
+          <p>{items.join(', ')}</p>
+        </div>
+      ))}
+    </section>
+
+    <section id="contact" style="margin-top: 2.5rem;">
+      <h2>{t.contact}</h2>
+      <p>{bio.contact}</p>
+      <p class="hero-links">
+        <a href={`mailto:${links.email}`}>{links.email}</a>
+        <a href={links.github} target="_blank" rel="me noopener noreferrer">GitHub</a>
+        <a href={links.linkedin} target="_blank" rel="me noopener noreferrer">LinkedIn</a>
+        <a href={links.x} target="_blank" rel="me noopener noreferrer">X</a>
+        <a href={localePath(locale, '/resume/')}>{t.resume}</a>
+      </p>
+    </section>
+  </article>
+</Base>

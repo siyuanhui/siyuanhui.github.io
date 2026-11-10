@@ -1,0 +1,98 @@
+---
+import { ui } from '../i18n/ui';
+import { localePath, type Locale } from '../lib/paths';
+
+interface Props {
+  locale: Locale;
+  unlocalizedPath: string;
+  enPath: string;
+  zhPath: string;
+}
+
+const { locale, unlocalizedPath, enPath, zhPath } = Astro.props;
+const t = ui(locale);
+const items = [
+  ['/projects/', t.projects],
+  ['/research/', t.research],
+  ['/garden/', t.garden],
+  ['/journal/', t.journal],
+  ['/about/', t.about],
+  ['/resume/', t.resume],
+] as const;
+
+function current(href: string) {
+  if (href === '/') return unlocalizedPath === '/';
+  return unlocalizedPath === href || unlocalizedPath.startsWith(href);
+}
+---
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="wordmark" href={localePath(locale, '/')}>
+      <span>{locale === 'zh' ? '惠思远' : 'Siyuan Hui'}</span>
+      <span class="wordmark-alt">{locale === 'zh' ? 'Siyuan Hui' : '惠思远'}</span>
+    </a>
+    <nav class="nav" aria-label={t.navAria}>
+      {
+        items.map(([href, label]) => (
+          <a href={localePath(locale, href)} aria-current={current(href) ? 'page' : undefined}>
+            {label}
+          </a>
+        ))
+      }
+    </nav>
+    <div class="tools">
+      <p class="langs">
+        <a href={enPath} hreflang="en" lang="en" aria-current={locale === 'en' ? 'true' : undefined}>EN</a>
+        <span aria-hidden="true">/</span>
+        <a href={zhPath} hreflang="zh-CN" lang="zh-CN" aria-current={locale === 'zh' ? 'true' : undefined}>中文</a>
+      </p>
+      <a class="search-link" href={localePath(locale, '/search/')} aria-label={t.search}>
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
+          <circle cx="11" cy="11" r="6"></circle>
+          <path d="M16 16l5 5"></path>
+        </svg>
+      </a>
+      <button
+        id="theme-toggle"
+        class="theme-toggle"
+        type="button"
+        aria-pressed="false"
+        aria-label={t.themeToDark}
+        data-label-dark={t.themeToDark}
+        data-label-light={t.themeToLight}
+      >
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
+          <circle cx="12" cy="12" r="3.2"></circle>
+          <path d="M12 3.5v2.2M12 18.3v2.2M3.5 12h2.2M18.3 12h2.2M6 6l1.6 1.6M16.4 16.4L18 18M18 6l-1.6 1.6M7.6 16.4L6 18"></path>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M15.5 3.5a8 8 0 1 0 5 12.5A7 7 0 0 1 15.5 3.5z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>
+<script is:inline>
+  (function () {
+    var btn = document.getElementById('theme-toggle');
+    if (!btn) return;
+    function theme() {
+      return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    }
+    function sync() {
+      var dark = theme() === 'dark';
+      btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+      btn.setAttribute('aria-label', dark ? btn.getAttribute('data-label-light') : btn.getAttribute('data-label-dark'));
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute('content', dark ? '#1C1F1E' : '#F8F6F0');
+    }
+    sync();
+    btn.addEventListener('click', function () {
+      var next = theme() === 'dark' ? 'light' : 'dark';
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      document.documentElement.setAttribute('data-theme', next);
+      sync();
+    });
+  })();
+</script>

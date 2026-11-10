@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import { byOrder, loadCollection, localize } from '../lib/content';
+import { ui } from '../i18n/ui';
+import { localePath, type Locale } from '../lib/paths';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const t = ui(locale);
+const entries = byOrder(localize(await loadCollection('projects'), locale).map((item) => item.entry));
+const title = t.pageTitle(t.projects);
+---
+
+<Base locale={locale} title={title} description={t.siteDescription} unlocalizedPath="/projects/">
+  <header class="page-header wrap">
+    <h1>{t.projects}</h1>
+  </header>
+  <div class="wrap" style="padding-bottom: 3rem;">
+    <ol class="plain-list">
+      {
+        entries.map((entry) => (
+          <li>
+            <p class="meta">
+              {[entry.data.period, entry.data.status === 'in-progress' ? t.inProgress : undefined, entry.data.tools ?? entry.data.role]
+                .filter(Boolean)
+                .join(' · ')}
+            </p>
+            <h2><a href={localePath(locale, `/projects/${entry.data.translationKey}/`)}>{entry.data.title}</a></h2>
+            <p>{entry.data.description}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</Base>
