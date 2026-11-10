@@ -9,22 +9,27 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script src="i18n.js" defer></script>
 </head>
 <body>
-  
-  <a class="skip-link" href="#main">Skip to content</a>
+
+  <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
 
   <header class="site-header">
     <div class="wrap header-inner">
       <a class="wordmark" href="#top">Siyuan Hui</a>
-      <nav class="nav" aria-label="Primary">
-        <a href="#about">About</a>
-        <a href="#education">Education</a>
-        <a href="#experience">Experience</a>
-        <a href="#projects">Projects</a>
-        <a href="#skills">Skills</a>
-        <a href="#contact">Contact</a>
+      <nav class="nav" aria-label="Primary" data-i18n-aria-label="nav.aria">
+        <a href="#about" data-i18n="nav.about">About</a>
+        <a href="#education" data-i18n="nav.education">Education</a>
+        <a href="#experience" data-i18n="nav.experience">Experience</a>
+        <a href="#projects" data-i18n="nav.projects">Projects</a>
+        <a href="#skills" data-i18n="nav.skills">Skills</a>
+        <a href="#contact" data-i18n="nav.contact">Contact</a>
       </nav>
+      <div class="lang-switch" role="group" aria-label="Language" data-i18n-aria-label="lang.aria">
+        <button type="button" data-set-lang="zh" aria-pressed="false">中文</button>
+        <button type="button" data-set-lang="en" aria-pressed="true">EN</button>
+      </div>
     </div>
   </header>
 
@@ -32,35 +37,35 @@
     <section id="top" class="hero">
       <div class="wrap hero-inner">
         <div class="avatar" aria-hidden="true">SH</div>
-        <p class="eyebrow">University of Michigan</p>
+        <p class="eyebrow" data-i18n="hero.eyebrow">University of Michigan</p>
         <h1>Siyuan Hui</h1>
         <p class="name-zh">惠思远</p>
-        <p class="headline">Computer Engineering undergraduate focused on digital IC design, hardware verification, and computer architecture.</p>
-        <p class="lede">I study Computer Engineering (BSE) at the University of Michigan, Ann Arbor, after transferring through the UM–SJTU Joint Institute dual degree program. I am also researching AI methods for monitoring GaN semiconductor growth.</p>
+        <p class="headline" data-i18n="hero.headline">Computer Engineering undergraduate focused on digital IC design, hardware verification, and computer architecture.</p>
+        <p class="lede" data-i18n="hero.lede">I study Computer Engineering (BSE) at the University of Michigan, Ann Arbor, after transferring through the UM–SJTU Joint Institute dual degree program. I am also researching AI methods for monitoring GaN semiconductor growth.</p>
         <p class="hero-actions">
-                    <!-- <a class="btn btn-primary" href="resume.pdf">Resume</a> -->
-                    <a class="btn" href="https://github.com/siyuanhui">GitHub</a>
-                    <!-- <a class="btn" href="#">LinkedIn</a> -->
-                    <!-- <a class="btn" href="#">X</a> -->
-          <a class="btn" href="mailto:rogerhui@umich.edu">Email</a>
+          <!-- <a class="btn btn-primary" href="resume.pdf">Resume</a> -->
+          <a class="btn" href="https://github.com/siyuanhui">GitHub</a>
+          <a class="btn" href="https://www.linkedin.com/in/siyuanhui" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="btn" href="https://x.com/RogerHuiIsBack" target="_blank" rel="noopener">X</a>
+          <a class="btn" href="mailto:rogerhui@umich.edu" data-i18n="hero.email">Email</a>
         </p>
       </div>
     </section>
 
     <section id="about" class="section">
       <div class="wrap">
-        <h2>About</h2>
+        <h2 data-i18n="about.title">About</h2>
         <div class="prose">
-          <p>I am an undergraduate in Computer Engineering at the University of Michigan, Ann Arbor. I came to Michigan through the UM–SJTU Joint Institute dual degree program, having studied Electrical and Computer Engineering at Shanghai Jiao Tong University from 2024 to 2026.</p>
-          <p>My interests are digital IC design, hardware verification, and computer architecture—from transistor-level circuit design to ISA toolchains and pipeline models. In Prof. Zetian Mi’s group at Michigan, I am reviewing deep learning approaches for interpreting in-situ RHEED images during GaN molecular beam epitaxy, and developing a research plan that connects image features to surface evolution during growth.</p>
+          <p data-i18n="about.p1">I am an undergraduate in Computer Engineering at the University of Michigan, Ann Arbor. I came to Michigan through the UM–SJTU Joint Institute dual degree program, having studied Electrical and Computer Engineering at Shanghai Jiao Tong University from 2024 to 2026.</p>
+          <p data-i18n="about.p2">My interests are digital IC design, hardware verification, and computer architecture—from transistor-level circuit design to ISA toolchains and pipeline models. In Prof. Zetian Mi’s group at Michigan, I am reviewing deep learning approaches for interpreting in-situ RHEED images during GaN molecular beam epitaxy, and developing a research plan that connects image features to surface evolution during growth.</p>
         </div>
         <div class="honors">
-          <h3>Honors</h3>
+          <h3 data-i18n="honors.title">Honors</h3>
           <ul>
-            <li>Successful Participant, MCM/ICM <span class="meta">January 2026</span></li>
-            <li>Best Buddy Award, M-ENGIN Leadership Program <span class="meta">March 2025</span></li>
-            <li>Bronze Medal, University Physics Competition <span class="meta">January 2025</span></li>
-            <li>Second Prize, Chinese Physics Olympiad, Shanghai Region <span class="meta">November 2023</span></li>
+            <li><span data-i18n="honor.mcm">Successful Participant, MCM/ICM</span> <span class="meta" data-i18n="date.jan2026">January 2026</span></li>
+            <li><span data-i18n="honor.buddy">Best Buddy Award, M-ENGIN Leadership Program</span> <span class="meta" data-i18n="date.mar2025">March 2025</span></li>
+            <li><span data-i18n="honor.upc">Bronze Medal, University Physics Competition</span> <span class="meta" data-i18n="date.jan2025">January 2025</span></li>
+            <li><span data-i18n="honor.cpho">Second Prize, Chinese Physics Olympiad, Shanghai Region</span> <span class="meta" data-i18n="date.nov2023">November 2023</span></li>
           </ul>
         </div>
       </div>
@@ -68,51 +73,51 @@
 
     <section id="education" class="section section-alt">
       <div class="wrap">
-        <h2>Education</h2>
+        <h2 data-i18n="edu.title">Education</h2>
         <article class="edu">
           <div class="edu-head">
             <div>
-              <h3>University of Michigan, Ann Arbor</h3>
-              <p class="role">Computer Engineering (BSE)</p>
+              <h3 data-i18n="umich.name">University of Michigan, Ann Arbor</h3>
+              <p class="role" data-i18n="umich.role">Computer Engineering (BSE)</p>
             </div>
-                        <p class="dates">Expected graduation 2028</p>
+            <p class="dates" data-i18n="umich.dates">Expected graduation 2028</p>
           </div>
-          <p>Transferred through the UM–SJTU Joint Institute dual degree program.</p>
+          <p data-i18n="umich.note">Transferred through the UM–SJTU Joint Institute dual degree program.</p>
         </article>
         <article class="edu">
           <div class="edu-head">
             <div>
-              <h3>Shanghai Jiao Tong University</h3>
-              <p class="role">Electrical and Computer Engineering</p>
+              <h3 data-i18n="sjtu.name">Shanghai Jiao Tong University</h3>
+              <p class="role" data-i18n="sjtu.role">Electrical and Computer Engineering</p>
             </div>
-            <p class="dates">2024–2026</p>
+            <p class="dates" data-i18n="sjtu.dates">2024–2026</p>
           </div>
-          <p>UM–SJTU Joint Institute dual degree program.</p>
-                  </article>
+          <p data-i18n="sjtu.note">UM–SJTU Joint Institute dual degree program.</p>
+        </article>
         <article class="edu">
           <div class="edu-head">
             <div>
-              <h3>University of Navarra, Spain</h3>
-              <p class="role">Winter academic exchange</p>
+              <h3 data-i18n="navarra.name">University of Navarra, Spain</h3>
+              <p class="role" data-i18n="navarra.role">Winter academic exchange</p>
             </div>
-            <p class="dates">January–February 2025</p>
+            <p class="dates" data-i18n="navarra.dates">January–February 2025</p>
           </div>
-          <p>Included Java game design.</p>
+          <p data-i18n="navarra.note">Included Java game design.</p>
         </article>
         <div class="coursework">
-          <h3>Relevant coursework</h3>
+          <h3 data-i18n="coursework.title">Relevant coursework</h3>
           <ul class="chip-list">
-            <li>Electronic Circuits (EECS 311)</li>
-            <li>Signals &amp; Systems (EECS 216)</li>
-            <li>Intro to Logic Design (EECS 270)</li>
-            <li>Programming &amp; Data Structures (EECS 280)</li>
-            <li>Intro to Circuits (EECS 215)</li>
-            <li>Probabilistic Methods (EECS 301)</li>
+            <li data-i18n="course.311">Electronic Circuits (EECS 311)</li>
+            <li data-i18n="course.216">Signals &amp; Systems (EECS 216)</li>
+            <li data-i18n="course.270">Intro to Logic Design (EECS 270)</li>
+            <li data-i18n="course.280">Programming &amp; Data Structures (EECS 280)</li>
+            <li data-i18n="course.215">Intro to Circuits (EECS 215)</li>
+            <li data-i18n="course.301">Probabilistic Methods (EECS 301)</li>
           </ul>
-          <h3 class="subhead">In progress, Fall 2026</h3>
+          <h3 class="subhead" data-i18n="coursework.inprogress">In progress, Fall 2026</h3>
           <ul class="chip-list">
-            <li>Computer Organization (EECS 370)</li>
-            <li>Digital Integrated Circuits (EECS 312)</li>
+            <li data-i18n="course.370">Computer Organization (EECS 370)</li>
+            <li data-i18n="course.312">Digital Integrated Circuits (EECS 312)</li>
           </ul>
         </div>
       </div>
@@ -120,70 +125,70 @@
 
     <section id="experience" class="section">
       <div class="wrap">
-        <h2>Experience</h2>
+        <h2 data-i18n="exp.title">Experience</h2>
 
-        <h3 class="group-label">Research</h3>
+        <h3 class="group-label" data-i18n="exp.research">Research</h3>
         <ol class="timeline">
           <li>
             <article>
               <div class="item-head">
                 <div>
-                  <h4>AI-Assisted GaN MBE Growth Monitoring</h4>
-                  <p class="role">Undergraduate Student Researcher, Prof. Zetian Mi’s group · University of Michigan</p>
+                  <h4 data-i18n="gan.title">AI-Assisted GaN MBE Growth Monitoring</h4>
+                  <p class="role" data-i18n="gan.role">Undergraduate Student Researcher, Prof. Zetian Mi’s group · University of Michigan</p>
                 </div>
-                                <p class="dates">September 2026–Present</p>
+                <p class="dates" data-i18n="gan.dates">September 2026–Present</p>
               </div>
-              <p>Reviewing deep learning approaches, including vision transformers and temporal models, for interpreting in-situ RHEED images during GaN molecular beam epitaxy. Developing a research plan relating image features to surface evolution and evaluating how growth-condition predictions could inform operator decisions.</p>
+              <p data-i18n="gan.desc">Reviewing deep learning approaches, including vision transformers and temporal models, for interpreting in-situ RHEED images during GaN molecular beam epitaxy. Developing a research plan relating image features to surface evolution and evaluating how growth-condition predictions could inform operator decisions.</p>
             </article>
           </li>
           <li>
             <article>
               <div class="item-head">
                 <div>
-                  <h4>Automated Data Processing &amp; Quantitative Analysis</h4>
-                  <p class="role">Undergraduate Researcher, SJTU PRP Research Program · Shanghai Jiao Tong University</p>
+                  <h4 data-i18n="prp.title">Automated Data Processing &amp; Quantitative Analysis</h4>
+                  <p class="role" data-i18n="prp.role">Undergraduate Researcher, SJTU PRP Research Program · Shanghai Jiao Tong University</p>
                 </div>
-                <p class="dates">January–September 2025</p>
+                <p class="dates" data-i18n="prp.dates">January–September 2025</p>
               </div>
-              <p>Built a data-processing workflow with Python and DeepSeek APIs for automated evaluation of unstructured data, carried out regression analysis in Python and Stata, and documented the work in a research paper.</p>
+              <p data-i18n="prp.desc">Built a data-processing workflow with Python and DeepSeek APIs for automated evaluation of unstructured data, carried out regression analysis in Python and Stata, and documented the work in a research paper.</p>
             </article>
           </li>
           <li>
             <article>
               <div class="item-head">
                 <div>
-                  <h4>Data Analysis Intern</h4>
-                  <p class="role">Shanghai Association for AI &amp; Social Development</p>
+                  <h4 data-i18n="intern.title">Data Analysis Intern</h4>
+                  <p class="role" data-i18n="intern.role">Shanghai Association for AI &amp; Social Development</p>
                 </div>
-                                <p class="dates">From September 2024</p>
+                <p class="dates" data-i18n="intern.dates">From September 2024</p>
               </div>
-              <p>Processed survey datasets with Python scripts to study AI adoption and contributed to policy reports.</p>
+              <p data-i18n="intern.desc">Processed survey datasets with Python scripts to study AI adoption and contributed to policy reports.</p>
             </article>
           </li>
         </ol>
 
-        <h3 class="group-label">Teaching &amp; leadership</h3>
+        <h3 class="group-label" data-i18n="exp.teaching">Teaching &amp; leadership</h3>
         <ol class="timeline">
           <li>
             <article>
               <div class="item-head">
                 <div>
-                  <h4>Teaching Assistant, Academic Writing</h4>
-                  <p class="role">Shanghai Jiao Tong University</p>
+                  <h4 data-i18n="ta.title">Teaching Assistant, Academic Writing</h4>
+                  <p class="role" data-i18n="ta.role">Shanghai Jiao Tong University</p>
                 </div>
-                <p class="dates">September–December 2025</p>
+                <p class="dates" data-i18n="ta.dates">September–December 2025</p>
               </div>
-              <p>Supported 50+ students as a teaching assistant for Academic Writing.</p>
+              <p data-i18n="ta.desc">Supported 50+ students as a teaching assistant for Academic Writing.</p>
             </article>
           </li>
           <li>
             <article>
               <div class="item-head">
                 <div>
-                  <h4>International Exchange Mentor</h4>
-                  <p class="role">SJTU Global College International Program Office</p>
+                  <h4 data-i18n="mentor.title">International Exchange Mentor</h4>
+                  <p class="role" data-i18n="mentor.role">SJTU Global College International Program Office</p>
                 </div>
-                                <p class="dates">From March 2025</p>
+                <p class="dates" data-i18n="mentor.dates">From March 2025</p>
               </div>
             </article>
           </li>
@@ -193,27 +198,27 @@
 
     <section id="projects" class="section section-alt">
       <div class="wrap">
-        <h2>Projects</h2>
+        <h2 data-i18n="proj.title">Projects</h2>
         <div class="project-grid">
           <article class="card">
-            <p class="card-meta"><span class="badge">In progress</span> <span>Fall 2026</span></p>
-            <h3>Transistor-Level 4×4 Unsigned Multiplier</h3>
+            <p class="card-meta"><span class="badge" data-i18n="status.progress">In progress</span> <span data-i18n="date.fall2026">Fall 2026</span></p>
+            <h3 data-i18n="proj.mult.title">Transistor-Level 4×4 Unsigned Multiplier</h3>
             <p class="card-tags">EECS 312 · Cadence · IBM 130 nm CMOS PDK</p>
-            <p>Designing a combinational 4×4 unsigned multiplier with an 8-bit output at the transistor-schematic level. The work compares partial-product reduction methods, adder structures, and transistor sizing against an energy–delay–area objective, E<sub>avg</sub>·D<sub>max</sub>²·A, under a specified supply and load, with area measured as total effective MOSFET width.</p>
-            <p>Planned evaluation includes exhaustive functional checks across all 256 input pairs, critical-path transition tests, and energy and worst-case delay simulations.</p>
+            <p data-i18n-html="proj.mult.p1">Designing a combinational 4×4 unsigned multiplier with an 8-bit output at the transistor-schematic level. The work compares partial-product reduction methods, adder structures, and transistor sizing against an energy–delay–area objective, E<sub>avg</sub>·D<sub>max</sub>²·A, under a specified supply and load, with area measured as total effective MOSFET width.</p>
+            <p data-i18n="proj.mult.p2">Planned evaluation includes exhaustive functional checks across all 256 input pairs, critical-path transition tests, and energy and worst-case delay simulations.</p>
           </article>
           <article class="card">
-                        <p class="card-meta"><span class="badge">In progress</span> <span>Fall 2026</span></p>
-            <h3>LC2K Processor Toolchain &amp; Architecture Simulation</h3>
-            <p class="card-tags">EECS 370 · C · LC2K assembly</p>
-            <p>Built an assembler and ISA simulator in C, then extended the toolchain with object-file generation, symbol resolution, relocation, and multi-file linking. Currently developing a cycle-accurate five-stage pipeline model with pipeline registers, data forwarding, load-use stalls, and predict-not-taken branches.</p>
-            <p>Scope includes a unified instruction/data cache simulator with configurable block size and associativity, LRU replacement, and write-back / write-allocate policy, plus directed assembly tests for hazards and cache behavior.</p>
+            <p class="card-meta"><span class="badge" data-i18n="status.progress">In progress</span> <span data-i18n="date.fall2026">Fall 2026</span></p>
+            <h3 data-i18n="proj.lc2k.title">LC2K Processor Toolchain &amp; Architecture Simulation</h3>
+            <p class="card-tags" data-i18n="proj.lc2k.tags">EECS 370 · C · LC2K assembly</p>
+            <p data-i18n="proj.lc2k.p1">Built an assembler and ISA simulator in C, then extended the toolchain with object-file generation, symbol resolution, relocation, and multi-file linking. Currently developing a cycle-accurate five-stage pipeline model with pipeline registers, data forwarding, load-use stalls, and predict-not-taken branches.</p>
+            <p data-i18n="proj.lc2k.p2">Scope includes a unified instruction/data cache simulator with configurable block size and associativity, LRU replacement, and write-back / write-allocate policy, plus directed assembly tests for hazards and cache behavior.</p>
           </article>
           <article class="card">
-            <p class="card-meta"><span>March–May 2025</span></p>
-            <h3>Embedded Robotics &amp; Hardware Integration</h3>
-            <p class="card-tags">Hardware Developer &amp; Team Lead · SJTU Science &amp; Technology Association · C/C++</p>
-            <p>Worked on an embedded robotic platform and manipulator with joystick control, integrating microcontroller firmware, motor actuation, and hardware interfaces. Wrote control firmware in C/C++ and coordinated hardware debugging and integration.</p>
+            <p class="card-meta"><span data-i18n="date.marMay2025">March–May 2025</span></p>
+            <h3 data-i18n="proj.robot.title">Embedded Robotics &amp; Hardware Integration</h3>
+            <p class="card-tags" data-i18n="proj.robot.tags">Hardware Developer &amp; Team Lead · SJTU Science &amp; Technology Association · C/C++</p>
+            <p data-i18n="proj.robot.p1">Worked on an embedded robotic platform and manipulator with joystick control, integrating microcontroller firmware, motor actuation, and hardware interfaces. Wrote control firmware in C/C++ and coordinated hardware debugging and integration.</p>
           </article>
         </div>
       </div>
@@ -221,10 +226,10 @@
 
     <section id="skills" class="section">
       <div class="wrap">
-        <h2>Skills</h2>
+        <h2 data-i18n="skills.title">Skills</h2>
         <div class="skills-grid">
           <div>
-            <h3>Programming</h3>
+            <h3 data-i18n="skills.programming">Programming</h3>
             <ul class="chip-list">
               <li>C</li>
               <li>C++</li>
@@ -235,7 +240,7 @@
             </ul>
           </div>
           <div>
-            <h3>Tools</h3>
+            <h3 data-i18n="skills.tools">Tools</h3>
             <ul class="chip-list">
               <li>Cadence</li>
               <li>Vivado</li>
@@ -248,11 +253,11 @@
             </ul>
           </div>
           <div>
-            <h3>Languages spoken</h3>
+            <h3 data-i18n="skills.languages">Languages spoken</h3>
             <ul class="chip-list">
-              <li>Chinese (native)</li>
-              <li>English (fluent)</li>
-              <li>Spanish (elementary)</li>
+              <li data-i18n="lang.chinese">Chinese (native)</li>
+              <li data-i18n="lang.english">English (fluent)</li>
+              <li data-i18n="lang.spanish">Spanish (elementary)</li>
             </ul>
           </div>
         </div>
@@ -261,13 +266,13 @@
 
     <section id="contact" class="section section-alt">
       <div class="wrap contact-inner">
-        <h2>Contact</h2>
-        <p class="lede">The best way to reach me is email. I am based in Ann Arbor, MI.</p>
+        <h2 data-i18n="contact.title">Contact</h2>
+        <p class="lede" data-i18n="contact.lede">The best way to reach me is email. I am based in Ann Arbor, MI.</p>
         <p class="hero-actions">
           <a class="btn btn-primary" href="mailto:rogerhui@umich.edu">rogerhui@umich.edu</a>
-                    <a class="btn" href="https://github.com/siyuanhui">GitHub</a>
-                    <!-- <a class="btn" href="#">LinkedIn</a> -->
-                    <!-- <a class="btn" href="#">X</a> -->
+          <a class="btn" href="https://github.com/siyuanhui">GitHub</a>
+          <a class="btn" href="https://www.linkedin.com/in/siyuanhui" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="btn" href="https://x.com/RogerHuiIsBack" target="_blank" rel="noopener">X</a>
         </p>
       </div>
     </section>
@@ -275,7 +280,7 @@
 
   <footer class="site-footer">
     <div class="wrap">
-      <p>© 2026 Siyuan Hui</p>
+      <p data-i18n="footer">© 2026 Siyuan Hui</p>
     </div>
   </footer>
 </body>
