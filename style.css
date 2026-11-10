@@ -14,8 +14,8 @@
   --shadow: 0 10px 30px rgba(15, 39, 64, 0.06);
   --radius: 16px;
   --header-h: 4.25rem;
-  --sans: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
-  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans: "Source Sans 3", "PingFang SC", "Noto Sans SC", "Noto Sans CJK SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+  --serif: "Source Serif 4", "PingFang SC", "Noto Sans SC", "Noto Sans CJK SC", "Microsoft YaHei", Georgia, "Times New Roman", serif;
 }
 
 *,
@@ -127,9 +127,9 @@ ul, ol {
 }
 
 .header-inner {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: space-between;
   gap: 1rem;
   height: var(--header-h);
 }
@@ -164,6 +164,59 @@ ul, ol {
 .nav a:hover,
 .nav a:focus-visible {
   color: var(--navy);
+}
+
+.lang-switch {
+  display: none;
+  flex-shrink: 0;
+  align-items: stretch;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--white);
+  overflow: hidden;
+}
+
+html.i18n-ready .lang-switch {
+  display: inline-flex;
+}
+
+.lang-switch button {
+  appearance: none;
+  margin: 0;
+  padding: 0.28rem 0.62rem;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.lang-switch button[aria-pressed="true"] {
+  background: var(--navy);
+  color: var(--white);
+}
+
+.lang-switch button:not([aria-pressed="true"]):hover,
+.lang-switch button:not([aria-pressed="true"]):focus-visible {
+  color: var(--navy);
+}
+
+html[lang="zh-CN"] .eyebrow,
+html[lang="zh-CN"] .honors h3,
+html[lang="zh-CN"] .coursework h3,
+html[lang="zh-CN"] .skills-grid h3,
+html[lang="zh-CN"] .group-label,
+html[lang="zh-CN"] .badge {
+  text-transform: none;
+  letter-spacing: 0.06em;
+}
+
+html[lang="zh-CN"] body {
+  line-height: 1.7;
 }
 
 .hero {
@@ -506,15 +559,30 @@ ul, ol {
   }
 
   .header-inner {
-    align-items: flex-start;
-    flex-direction: column;
-    justify-content: center;
-    gap: 0.25rem;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "wordmark lang"
+      "nav nav";
+    align-items: center;
+    gap: 0.35rem 0.75rem;
     padding: 0.55rem 0;
+    height: auto;
   }
 
-  .site-header,
-  .header-inner {
+  .wordmark {
+    grid-area: wordmark;
+  }
+
+  .lang-switch {
+    grid-area: lang;
+    justify-self: end;
+  }
+
+  .nav {
+    grid-area: nav;
+  }
+
+  .site-header {
     height: auto;
   }
 
