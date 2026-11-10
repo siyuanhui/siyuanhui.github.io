@@ -1,0 +1,91 @@
+---
+import Base from '../layouts/Base.astro';
+import { loadCollection, localize } from '../lib/content';
+import { ui } from '../i18n/ui';
+import { localePath, type Locale } from '../lib/paths';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const t = ui(locale);
+
+function plain(value: string | undefined) {
+  return (value ?? '')
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/[#>*_\[\]()`$]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+const records: { title: string; text: string; href: string; kind: string }[] = [];
+for (const name of ['projects', 'research', 'garden', 'journal'] as const) {
+  const entries = localize(await loadCollection(name), locale);
+  for (const { entry } of entries) {
+    const href =
+      name === 'projects' || name === 'research' || name === 'garden' || name === 'journal'
+        ? localePath(locale, `/${name}/${entry.data.translationKey}/`)
+        : localePath(locale, '/');
+    const facts = 'facts' in entry.data ? entry.data.facts : [];
+    records.push({
+      title: entry.data.title,
+      href,
+      kind: t[name],
+      text: [entry.data.description, ...facts, entry.data.tags.join(' '), plain(entry.body)].join(' '),
+    });
+  }
+}
+records.push({
+  title: t.about,
+  href: localePath(locale, '/about/'),
+  kind: t.about,
+  text: t.siteDescription,
+});
+records.push({
+  title: t.coursework,
+  href: localePath(locale, '/garden/courses/'),
+  kind: t.garden,
+  text: 'EECS 311 EECS 216 EECS 270 EECS 280 EECS 215 EECS 301 EECS 370 EECS 312',
+});
+---
+
+<Base locale={locale} title={t.pageTitle(t.search)} description={t.searchLabel} unlocalizedPath="/search/">
+  <header class="page-header wrap">
+    <h1>{t.search}</h1>
+    <label class="sr-only" for="site-search">{t.searchLabel}</label>
+    <input id="site-search" class="search-input" type="search" placeholder={t.searchLabel} />
+  </header>
+  <div class="wrap" style="padding-bottom: 3rem;">
+    <p id="search-empty" class="section-intro" hidden>{t.noMatches}</p>
+    <ol id="search-results" class="plain-list">
+      {
+        records.map((record) => (
+          <li data-search={`${record.title} ${record.text}`.toLowerCase()}>
+            <p class="meta">{record.kind}</p>
+            <h2><a href={record.href}>{record.title}</a></h2>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+  <script is:inline>
+    (function () {
+      var input = document.getElementById('site-search');
+      var list = document.getElementById('search-results');
+      var empty = document.getElementById('search-empty');
+      if (!input || !list || !empty) return;
+      var params = new URLSearchParams(location.search);
+      if (params.get('q')) input.value = params.get('q');
+      function apply() {
+        var q = input.value.toLowerCase().trim();
+        var shown = 0;
+        list.querySelectorAll('[data-search]').forEach(function (row) {
+          var match = !q || row.getAttribute('data-search').indexOf(q) !== -1;
+          row.hidden = !match;
+          if (match) shown += 1;
+        });
+        empty.hidden = shown !== 0;
+      }
+      input.addEventListener('input', apply);
+      apply();
+    })();
+  </script>
+</Base>

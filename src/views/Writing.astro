@@ -1,0 +1,72 @@
+---
+import { render } from 'astro:content';
+import Entry from '../layouts/Entry.astro';
+import { categoryLabel } from '../data/journal';
+import { topicLabel } from '../data/topics';
+import { findLocalized, loadCollection, relatedOf } from '../lib/content';
+import { publicFileExists } from '../lib/files';
+import { ui } from '../i18n/ui';
+import { formatDate, readingMinutes } from '../lib/reading';
+import { localePath, type Locale } from '../lib/paths';
+
+interface Props {
+  locale: Locale;
+  slug: string;
+  collection: 'garden' | 'journal';
+}
+
+const { locale, slug, collection } = Astro.props;
+const found = await findLocalized(collection, slug, locale);
+if (!found) throw new Error(`Missing ${collection}:${slug}`);
+const { entry, fallback } = found;
+const { Content, headings } = await render(entry);
+const t = ui(locale);
+const data = entry.data;
+const all = await loadCollection(collection);
+const related = relatedOf(all, entry, locale).map((item) => ({
+  href: localePath(locale, `/${collection}/${item.entry.data.translationKey}/`),
+  title: item.entry.data.title,
+  meta: formatDate(item.entry.data.date, locale),
+}));
+
+const bits = [formatDate(data.date, locale), t.minRead(readingMinutes(entry.body))];
+if ('status' in data && data.status) {
+  bits.push(data.status === 'seedling' ? t.seedling : data.status === 'growing' ? t.growing : data.status === 'evergreen' ? t.evergreen : data.status);
+}
+if (collection === 'garden' && 'kind' in data && data.kind === 'reference') bits.push(t.reference);
+if (collection === 'journal' && 'form' in data && data.form === 'essay') bits.push(t.essay);
+if ('version' in data && data.version === 'original') bits.push(t.originalVersion);
+if ('version' in data && data.version === 'revised') bits.push(t.revisedVersion);
+
+let kicker = collection === 'garden' ? t.garden : t.journal;
+if (collection === 'garden' && 'topic' in data) kicker = topicLabel(data.topic, locale);
+if (collection === 'journal' && 'category' in data && data.category) kicker = categoryLabel(data.category, locale);
+
+const pdf =
+  'pdf' in data && data.pdf && publicFileExists(data.pdf)
+    ? { href: data.pdf, label: t.pdfDownload }
+    : null;
+const audio = 'audio' in data && data.audio && publicFileExists(data.audio) ? data.audio : undefined;
+---
+
+<Entry
+  locale={locale}
+  title={data.title}
+  description={data.description}
+  unlocalizedPath={`/${collection}/${data.translationKey}/`}
+  kicker={kicker}
+  lede={data.description}
+  meta={bits.join(' · ')}
+  notice={fallback ? t.untranslated : undefined}
+  draft={data.draft}
+  headings={headings}
+  related={related}
+  contentLanguage={data.language}
+  published={data.date}
+  pdf={pdf}
+  audio={audio}
+  variant="editorial"
+>
+  {'analyzes' in data && data.analyzes && <p class="meta">{t.analyzes} {data.analyzes}</p>}
+  <Content />
+</Entry>

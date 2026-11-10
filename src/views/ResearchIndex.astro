@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import { byOrder, loadCollection, localize } from '../lib/content';
+import { ui } from '../i18n/ui';
+import { localePath, type Locale } from '../lib/paths';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const t = ui(locale);
+const entries = byOrder(localize(await loadCollection('research'), locale).map((item) => item.entry));
+---
+
+<Base locale={locale} title={t.pageTitle(t.research)} description={t.researchIntro} unlocalizedPath="/research/">
+  <header class="page-header wrap">
+    <h1>{t.research}</h1>
+    <p class="lede">{t.researchIntro}</p>
+  </header>
+  <div class="wrap" style="padding-bottom: 3rem;">
+    <ol class="plain-list">
+      {
+        entries.map((entry) => (
+          <li>
+            <p class="meta">{[entry.data.role, entry.data.period].filter(Boolean).join(' · ')}</p>
+            <h2><a href={localePath(locale, `/research/${entry.data.translationKey}/`)}>{entry.data.title}</a></h2>
+            <p>{entry.data.description}</p>
+            {entry.data.facts[0] && <p class="meta">{entry.data.facts[0]}</p>}
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</Base>

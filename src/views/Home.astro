@@ -1,0 +1,225 @@
+---
+import Base from '../layouts/Base.astro';
+import { links } from '../data/links';
+import { categoryLabel, journalCategories } from '../data/journal';
+import { topicLabel, topics } from '../data/topics';
+import profile from '../data/profile.json';
+import { byOrder, featuredFirst, loadCollection, localize, nowEntry } from '../lib/content';
+import { resumeHref } from '../lib/files';
+import { ui } from '../i18n/ui';
+import { formatDate } from '../lib/reading';
+import { localePath, type Locale } from '../lib/paths';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = ui(locale);
+const bio = profile[locale];
+const [projects, research, garden, journal, now] = await Promise.all([
+  loadCollection('projects').then((entries) => byOrder(featuredFirst(localize(entries, locale).map((item) => item.entry)))),
+  loadCollection('research').then((entries) => byOrder(localize(entries, locale).map((item) => item.entry))),
+  loadCollection('garden').then((entries) => featuredFirst(localize(entries, locale).map((item) => item.entry))),
+  loadCollection('journal').then((entries) => featuredFirst(localize(entries, locale).map((item) => item.entry))),
+  nowEntry(locale),
+]);
+const featured = projects.filter((entry) => entry.data.featured).slice(0, 3);
+const notes = garden.slice(0, 3);
+const essays = journal.slice(0, 1);
+const selected = featuredFirst([...garden, ...journal]).slice(0, 3);
+const resume = resumeHref();
+---
+
+<Base locale={locale} title={t.siteTitle} description={t.siteDescription} unlocalizedPath="/">
+  <section class="hero">
+    <div class="wrap">
+      <h1>{t.heroTitle}</h1>
+      <p class="hero-alt">{t.heroAlt}</p>
+      <p class="hero-sub">{t.heroSubtitle}</p>
+      <hr class="rule" />
+      <p class="hero-intro">{t.heroIntro}</p>
+      <p class="hero-meta">{t.heroAffiliation}</p>
+      <p class="hero-meta">{t.heroInterests}</p>
+      <p class="hero-links">
+        <a href={localePath(locale, '/resume/')}>{t.resume}</a>
+        <a href={`mailto:${links.email}`}>{links.email}</a>
+        <a href={links.github} target="_blank" rel="me noopener noreferrer">GitHub</a>
+        <a href={links.linkedin} target="_blank" rel="me noopener noreferrer">LinkedIn</a>
+        <a href={links.x} target="_blank" rel="me noopener noreferrer">X</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>{t.featuredProjects}</h2>
+        <a href={localePath(locale, '/projects/')}>{t.allProjects}</a>
+      </div>
+      <ol class="features">
+        {
+          featured.map((entry, index) => (
+            <li>
+              <span class="index-no">{String(index + 1).padStart(2, '0')}</span>
+              <div>
+                <p class="meta">
+                  {[entry.data.course, entry.data.period, entry.data.status === 'in-progress' ? t.inProgress : undefined]
+                    .filter(Boolean)
+                    .join(' · ')}
+                </p>
+                <h3>
+                  <a href={localePath(locale, `/projects/${entry.data.translationKey}/`)}>{entry.data.title}</a>
+                </h3>
+                <p>{entry.data.description}</p>
+                {entry.data.facts.length > 0 && (
+                  <ul class="facts">
+                    {entry.data.facts.slice(0, 3).map((fact) => (
+                      <li>{fact}</li>
+                    ))}
+                  </ul>
+                )}
+                <p class="more">
+                  <a href={localePath(locale, `/projects/${entry.data.translationKey}/`)}>{t.caseStudy}</a>
+                </p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>{t.research}</h2>
+        <a href={localePath(locale, '/research/')}>{t.allResearch}</a>
+      </div>
+      <p class="section-intro">{t.researchIntro}</p>
+      <ol class="plain-list">
+        {
+          research.map((entry) => (
+            <li>
+              <p class="meta">{[entry.data.role, entry.data.period].filter(Boolean).join(' · ')}</p>
+              <h3>
+                <a href={localePath(locale, `/research/${entry.data.translationKey}/`)}>{entry.data.title}</a>
+              </h3>
+              <p>{entry.data.description}</p>
+              {entry.data.translationKey === 'gan-mbe' && <p class="meta">{entry.data.facts[0]}</p>}
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>{t.fromGarden}</h2>
+        <a href={localePath(locale, '/garden/')}>{t.garden}</a>
+      </div>
+      <p class="section-intro">{t.gardenIntro}</p>
+      <ul class="topic-line">
+        {topics.map((topic) => <li><span>{locale === 'zh' ? topic.zh : topic.en}</span></li>)}
+      </ul>
+      <p class="more"><a href={localePath(locale, '/garden/courses/')}>{t.courseworkArchive}</a></p>
+      {
+        notes.length > 0 ? (
+          <ol class="plain-list">
+            {notes.map((entry) => (
+              <li>
+                <p class="meta">{topicLabel(entry.data.topic, locale)} · {t[entry.data.status]}</p>
+                <h3><a href={localePath(locale, `/garden/${entry.data.translationKey}/`)}>{entry.data.title}</a></h3>
+                <p>{entry.data.description}</p>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p class="section-intro">{t.noNotes}</p>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>{t.fromJournal}</h2>
+        <a href={localePath(locale, '/journal/')}>{t.journal}</a>
+      </div>
+      <p class="section-intro">{t.journalIntro}</p>
+      <ul class="category-line">
+        {journalCategories.map((category) => <li><span>{locale === 'zh' ? category.zh : category.en}</span></li>)}
+      </ul>
+      {
+        essays.length > 0 ? (
+          <ol class="plain-list">
+            {essays.map((entry) => (
+              <li>
+                <p class="meta">{entry.data.category ? categoryLabel(entry.data.category, locale) : t.journal}</p>
+                <h3><a href={localePath(locale, `/journal/${entry.data.translationKey}/`)}>{entry.data.title}</a></h3>
+                <p>{entry.data.description}</p>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p class="section-intro">{t.noEntries}</p>
+        )
+      }
+    </div>
+  </section>
+
+  {
+    selected.length > 0 && (
+      <section class="block">
+        <div class="wrap">
+          <h2>{t.selectedWriting}</h2>
+          <ol class="plain-list">
+            {selected.map((entry) => {
+              const kind = 'topic' in entry.data ? 'garden' : 'journal';
+              return (
+                <li>
+                  <p class="meta">{kind === 'garden' ? t.garden : t.journal} · {formatDate(entry.data.date, locale)}</p>
+                  <h3><a href={localePath(locale, `/${kind}/${entry.data.translationKey}/`)}>{entry.data.title}</a></h3>
+                  <p>{entry.data.description}</p>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    now && (
+      <section class="block">
+        <div class="wrap">
+          <h2>{t.now}</h2>
+          <p class="section-intro">{now.entry.data.summary}</p>
+          <p class="more"><a href={localePath(locale, '/now/')}>{t.fullNow}</a></p>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>{t.aboutContact}</h2>
+        <a href={localePath(locale, '/about/')}>{t.educationHonors}</a>
+      </div>
+      <div class="prose" style="max-width: 42rem; margin-top: 1rem;">
+        {bio.about.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+      <p class="hero-links">
+        <a href={`mailto:${links.email}`}>{links.email}</a>
+        <a href={links.github}>GitHub</a>
+        <a href={links.linkedin}>LinkedIn</a>
+        <a href={links.x}>X</a>
+        {resume && <a href={resume}>{t.resumeDownload}</a>}
+      </p>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import { links } from '../data/links';
+import { resumeHref } from '../lib/files';
+import { ui } from '../i18n/ui';
+import type { Locale } from '../lib/paths';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const t = ui(locale);
+const pdf = resumeHref();
+---
+
+<Base locale={locale} title={t.pageTitle(t.resume)} description={t.resumePending} unlocalizedPath="/resume/">
+  <article class="wrap" style="padding-bottom: 3.5rem;">
+    <header class="page-header">
+      <h1>{t.resume}</h1>
+      {
+        pdf ? (
+          <p class="lede"><a href={pdf}>{t.resumeDownload}</a></p>
+        ) : (
+          <>
+            <p class="lede">{t.resumePending}</p>
+            <p>{t.resumeAsk}</p>
+          </>
+        )
+      }
+      <p class="hero-links">
+        <a href={`mailto:${links.email}`}>{links.email}</a>
+        <a href={links.github}>GitHub</a>
+        <a href={links.linkedin}>LinkedIn</a>
+        <a href={links.x}>X</a>
+      </p>
+    </header>
+    {pdf && <iframe class="resume-frame" src={pdf} title={t.resume}></iframe>}
+  </article>
+</Base>

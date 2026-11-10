@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://siyuanhui.github.io/sitemap-index.xml

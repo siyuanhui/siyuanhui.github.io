@@ -1,0 +1,85 @@
+---
+import Base from '../layouts/Base.astro';
+import { courses } from '../data/courses';
+import { topicLabel } from '../data/topics';
+import { loadCollection, localize } from '../lib/content';
+import { ui } from '../i18n/ui';
+import { localePath, type Locale } from '../lib/paths';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const t = ui(locale);
+const projects = localize(await loadCollection('projects'), locale);
+const pages = localize(await loadCollection('courses'), locale);
+const listed = courses.filter((course) => !course.progress);
+const current = courses.filter((course) => course.progress);
+
+function projectFor(code: string) {
+  return projects.find((item) => item.entry.data.course === code);
+}
+function pageFor(code: string) {
+  return pages.find((item) => item.entry.data.code === code);
+}
+---
+
+<Base locale={locale} title={t.pageTitle(t.coursework)} description={t.relevantCoursework} unlocalizedPath="/garden/courses/">
+  <header class="page-header wrap">
+    <p class="kicker"><a href={localePath(locale, '/garden/')}>{t.garden}</a></p>
+    <h1>{t.coursework}</h1>
+    <p class="lede">{t.noCoursePage}</p>
+    <label class="sr-only" for="course-filter">{t.search}</label>
+    <input id="course-filter" class="filter-input" type="search" placeholder={locale === 'zh' ? '筛选课程' : 'Filter courses'} />
+  </header>
+  <div class="wrap" style="padding-bottom: 3rem;">
+    <h2 class="group-label">{t.relevantCoursework}</h2>
+    {
+      listed.map((course) => {
+        const title = locale === 'zh' ? course.zh : course.en;
+        const project = projectFor(course.code);
+        const page = pageFor(course.code);
+        return (
+          <article class="course-row" data-course={title.toLowerCase()}>
+            <h3>{page ? <a href={localePath(locale, `/garden/courses/${page.entry.data.translationKey}/`)}>{title}</a> : title}</h3>
+            {project && (
+              <p class="more">
+                <a href={localePath(locale, `/projects/${project.entry.data.translationKey}/`)}>{project.entry.data.title}</a>
+              </p>
+            )}
+          </article>
+        );
+      })
+    }
+    <h2 class="group-label">{t.inProgressHeading}</h2>
+    {
+      current.map((course) => {
+        const title = locale === 'zh' ? course.zh : course.en;
+        const project = projectFor(course.code);
+        const page = pageFor(course.code);
+        const topic = 'topic' in course ? topicLabel(course.topic, locale) : '';
+        return (
+          <article class="course-row" data-course={`${title} ${topic}`.toLowerCase()}>
+            <p class="meta">{topic}</p>
+            <h3>{page ? <a href={localePath(locale, `/garden/courses/${page.entry.data.translationKey}/`)}>{title}</a> : title}</h3>
+            {project && (
+              <p class="more">
+                <a href={localePath(locale, `/projects/${project.entry.data.translationKey}/`)}>{project.entry.data.title}</a>
+              </p>
+            )}
+          </article>
+        );
+      })
+    }
+  </div>
+  <script is:inline>
+    (function () {
+      var input = document.getElementById('course-filter');
+      if (!input) return;
+      input.addEventListener('input', function () {
+        var q = input.value.toLowerCase().trim();
+        document.querySelectorAll('[data-course]').forEach(function (row) {
+          row.hidden = q.length > 0 && row.getAttribute('data-course').indexOf(q) === -1;
+        });
+      });
+    })();
+  </script>
+</Base>

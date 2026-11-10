@@ -1,0 +1,9 @@
+---
+import { staticPaths } from '../../../../lib/content';
+import View from '../../../../views/CourseEntry.astro';
+export async function getStaticPaths() {
+  return staticPaths('courses');
+}
+const { slug } = Astro.params;
+---
+<View locale="zh" slug={slug!} />

@@ -1,0 +1,86 @@
+---
+import { render } from 'astro:content';
+import Entry from '../layouts/Entry.astro';
+import { findLocalized, loadCollection, localize } from '../lib/content';
+import { publicFileExists } from '../lib/files';
+import { ui } from '../i18n/ui';
+import { localePath, type Locale } from '../lib/paths';
+
+interface Props {
+  locale: Locale;
+  slug: string;
+}
+
+const { locale, slug } = Astro.props;
+const found = await findLocalized('courses', slug, locale);
+if (!found) throw new Error(`Missing course ${slug}`);
+const { entry, fallback } = found;
+const { Content, headings } = await render(entry);
+const t = ui(locale);
+const code = entry.data.code;
+const [notes, projects] = await Promise.all([loadCollection('garden'), loadCollection('projects')]);
+const relatedNotes = localize(notes, locale).filter((item) => item.entry.data.course === code);
+const relatedProjects = localize(projects, locale).filter((item) => item.entry.data.course === code);
+const pdfs = entry.data.pdfs.filter((file) => publicFileExists(file.href));
+---
+
+<Entry
+  locale={locale}
+  title={entry.data.title}
+  description={entry.data.description}
+  unlocalizedPath={`/garden/courses/${entry.data.translationKey}/`}
+  kicker={t.coursework}
+  meta={[entry.data.code, entry.data.period, entry.data.university].filter(Boolean).join(' · ')}
+  notice={fallback ? t.untranslated : undefined}
+  draft={entry.data.draft}
+  headings={headings}
+  contentLanguage={entry.data.language}
+  published={entry.data.date}
+  variant="editorial"
+>
+  <Content />
+  {
+    pdfs.length > 0 && (
+      <>
+        <h2>{t.downloads}</h2>
+        <ul>
+          {pdfs.map((file) => (
+            <li>
+              <a href={file.href} download>
+                {file.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </>
+    )
+  }
+  {
+    relatedProjects.length > 0 && (
+      <>
+        <h2>{t.relatedProject}</h2>
+        <ul>
+          {relatedProjects.map((item) => (
+            <li>
+              <a href={localePath(locale, `/projects/${item.entry.data.translationKey}/`)}>{item.entry.data.title}</a>
+            </li>
+          ))}
+        </ul>
+      </>
+    )
+  }
+  {
+    relatedNotes.length > 0 && (
+      <>
+        <h2>{t.gardenNotes}</h2>
+        <ul>
+          {relatedNotes.map((item) => (
+            <li>
+              <a href={localePath(locale, `/garden/${item.entry.data.translationKey}/`)}>{item.entry.data.title}</a>
+            </li>
+          ))}
+        </ul>
+      </>
+    )
+  }
+</Entry>

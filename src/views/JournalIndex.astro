@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+import { categoryLabel, journalCategories } from '../data/journal';
+import { featuredFirst, loadCollection, localize } from '../lib/content';
+import { ui } from '../i18n/ui';
+import { formatDate } from '../lib/reading';
+import { localePath, type Locale } from '../lib/paths';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const t = ui(locale);
+const entries = featuredFirst(localize(await loadCollection('journal'), locale).map((item) => item.entry));
+---
+
+<Base locale={locale} title={t.pageTitle(t.journal)} description={t.journalIntro} unlocalizedPath="/journal/">
+  <header class="page-header wrap">
+    <h1>{t.journal}</h1>
+    <p class="lede">{t.journalIntro}</p>
+  </header>
+  <div class="wrap" style="padding-bottom: 3.5rem;">
+    <ul class="category-line">
+      {
+        journalCategories.map((category) => (
+          <li>
+            {entries.some((entry) => entry.data.category === category.id) ? (
+              <a href={`#${category.id}`}>{locale === 'zh' ? category.zh : category.en}</a>
+            ) : (
+              <span>{locale === 'zh' ? category.zh : category.en}</span>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+    {
+      entries.length === 0 ? (
+        <p class="section-intro">{t.noEntries}</p>
+      ) : (
+        journalCategories
+          .map((category) => ({ category, entries: entries.filter((entry) => entry.data.category === category.id) }))
+          .filter((group) => group.entries.length > 0)
+          .map((group) => (
+            <section id={group.category.id} style="margin-top: 2rem;">
+              <h2>{categoryLabel(group.category.id, locale)}</h2>
+              <ol class="plain-list">
+                {group.entries.map((entry) => (
+                  <li>
+                    <p class="meta">{formatDate(entry.data.date, locale)} · {entry.data.form === 'essay' ? t.essay : t.thought}</p>
+                    <h3><a href={localePath(locale, `/journal/${entry.data.translationKey}/`)}>{entry.data.title}</a></h3>
+                    <p>{entry.data.description}</p>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          ))
+      )
+    }
+  </div>
+</Base>

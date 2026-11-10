@@ -1,0 +1,171 @@
+---
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-ext-400.css';
+import '@fontsource/inter/latin-500.css';
+import '@fontsource/inter/latin-ext-500.css';
+import '@fontsource/inter/latin-600.css';
+import '@fontsource/inter/latin-ext-600.css';
+import '@fontsource/eb-garamond/latin-500.css';
+import '@fontsource/eb-garamond/latin-ext-500.css';
+import '@fontsource/eb-garamond/latin-500-italic.css';
+import '@fontsource/eb-garamond/latin-ext-500-italic.css';
+import '@fontsource/eb-garamond/latin-600.css';
+import '@fontsource/eb-garamond/latin-ext-600.css';
+import 'katex/dist/katex.min.css';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { links, sameAs } from '../data/links';
+import { ui, siteName } from '../i18n/ui';
+import { absoluteUrl, htmlLang, localePath, type Locale } from '../lib/paths';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  unlocalizedPath: string;
+  langPaths?: { en: string; zh: string };
+  ogType?: 'website' | 'article';
+  published?: Date;
+  noindex?: boolean;
+}
+
+const {
+  locale,
+  title,
+  description,
+  unlocalizedPath,
+  langPaths,
+  ogType = 'website',
+  published,
+  noindex = false,
+} = Astro.props;
+const t = ui(locale);
+const enPath = langPaths?.en ?? localePath('en', unlocalizedPath);
+const zhPath = langPaths?.zh ?? localePath('zh', unlocalizedPath);
+const canonicalPath = locale === 'zh' ? zhPath : enPath;
+const canonical = absoluteUrl(canonicalPath);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      name: 'Siyuan Hui',
+      alternateName: '惠思远',
+      url: absoluteUrl('/'),
+      inLanguage: ['en', 'zh-CN'],
+    },
+    {
+      '@type': 'Person',
+      name: 'Siyuan Hui',
+      alternateName: '惠思远',
+      url: absoluteUrl('/'),
+      email: `mailto:${links.email}`,
+      affiliation: { '@type': 'CollegeOrUniversity', name: 'University of Michigan' },
+      sameAs,
+    },
+    ...(ogType === 'article'
+      ? [
+          {
+            '@type': 'Article',
+            headline: title,
+            description,
+            inLanguage: htmlLang(locale),
+            datePublished: published?.toISOString(),
+            author: { '@type': 'Person', name: 'Siyuan Hui' },
+            url: canonical,
+          },
+        ]
+      : []),
+  ],
+};
+---
+
+<!doctype html>
+<html lang={htmlLang(locale)} data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="en" href={absoluteUrl(enPath)} />
+    <link rel="alternate" hreflang="zh-CN" href={absoluteUrl(zhPath)} />
+    <link rel="alternate" hreflang="x-default" href={absoluteUrl(enPath)} />
+    <link rel="alternate" type="application/rss+xml" title={siteName(locale)} href={localePath(locale, '/rss.xml')} />
+    <meta name="theme-color" content="#F8F6F0" />
+    <meta property="og:site_name" content={siteName(locale)} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={locale === 'zh' ? 'zh_CN' : 'en_US'} />
+    <meta property="og:locale:alternate" content={locale === 'zh' ? 'en_US' : 'zh_CN'} />
+    <meta property="og:image" content={absoluteUrl('/og.png')} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={absoluteUrl('/og.png')} />
+    {published && <meta property="article:published_time" content={published.toISOString()} />}
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme');
+          var theme = stored === 'dark' ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute('content', theme === 'dark' ? '#1C1F1E' : '#F8F6F0');
+        } catch (e) {}
+
+        var params;
+        try { params = new URLSearchParams(window.location.search); }
+        catch (e) { return; }
+        var q = (params.get('lang') || '').toLowerCase();
+        var wantZh = q === 'zh' || q.indexOf('zh-') === 0;
+        var wantEn = q === 'en' || q.indexOf('en-') === 0;
+        if (!wantZh && !wantEn) return;
+
+        var path = window.location.pathname.replace(/\/index\.html$/, '/');
+        if (path === '') path = '/';
+        var hash = window.location.hash || '';
+        var onZh = path === '/zh' || path.indexOf('/zh/') === 0;
+        var bare = onZh ? path.replace(/^\/zh/, '') || '/' : path;
+        if (bare === '') bare = '/';
+        var legacy = {
+          '#top': '/',
+          '#about': '/about/',
+          '#education': '/about/#education',
+          '#experience': '/research/',
+          '#projects': '/projects/',
+          '#skills': '/about/#skills',
+          '#contact': '/about/#contact'
+        };
+        if ((bare === '/' || bare === '') && Object.prototype.hasOwnProperty.call(legacy, hash)) {
+          var mapped = legacy[hash];
+          var cut = mapped.indexOf('#');
+          bare = cut === -1 ? mapped : mapped.slice(0, cut);
+          hash = cut === -1 ? '' : mapped.slice(cut);
+        }
+        var leaf = bare.split('/').filter(Boolean).pop() || '';
+        if (leaf.indexOf('.') === -1 && bare !== '/' && bare.charAt(bare.length - 1) !== '/') bare += '/';
+        var target = wantZh ? (bare === '/' ? '/zh/' : '/zh' + bare) : bare;
+        params.delete('lang');
+        var qs = params.toString();
+        var next = target + (qs ? '?' + qs : '') + hash;
+        var current = path + window.location.search + window.location.hash;
+        if (next !== current) window.location.replace(next);
+      })();
+    </script>
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t.skip}</a>
+    <Header locale={locale} unlocalizedPath={unlocalizedPath} enPath={enPath} zhPath={zhPath} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer locale={locale} />
+  </body>
+</html>

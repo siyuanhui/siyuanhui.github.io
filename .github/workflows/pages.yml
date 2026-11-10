@@ -1,0 +1,68 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run verify
+      - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Read Pages build type
+        id: detect
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          code=$(curl -sS -o /tmp/pages.json -w "%{http_code}" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pages" || true)
+          if [ "$code" = "200" ]; then
+            type=$(jq -r '.build_type // "unknown"' /tmp/pages.json)
+          else
+            type="unknown"
+          fi
+          echo "http_code=$code" >> "$GITHUB_OUTPUT"
+          echo "build_type=$type" >> "$GITHUB_OUTPUT"
+          echo "Pages build_type=$type (HTTP $code)"
+      - name: Leave the current site in place
+        if: steps.detect.outputs.build_type == 'legacy'
+        run: |
+          echo "::notice title=GitHub Pages is still deploying from the main branch::The new site was built and uploaded as an artifact, but it was not published. https://siyuanhui.github.io keeps serving the repository root index.html, so the current site stays up. To publish this redesign, set Settings → Pages → Build and deployment → Source to GitHub Actions, then re-run this workflow."
+      - name: Deploy to GitHub Pages
+        id: deployment
+        if: steps.detect.outputs.build_type != 'legacy'
+        uses: actions/deploy-pages@v4

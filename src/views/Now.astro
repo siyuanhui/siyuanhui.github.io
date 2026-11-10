@@ -1,0 +1,43 @@
+---
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Entry from '../layouts/Entry.astro';
+import { nowEntry } from '../lib/content';
+import { ui } from '../i18n/ui';
+import type { Locale } from '../lib/paths';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const t = ui(locale);
+const found = await nowEntry(locale);
+const rendered = found ? await render(found.entry) : undefined;
+const Content = rendered?.Content;
+---
+
+{
+  found && Content && rendered ? (
+    <Entry
+      locale={locale}
+      title={found.entry.data.title}
+      description={found.entry.data.description}
+      unlocalizedPath="/now/"
+      kicker={t.now}
+      lede={found.entry.data.summary}
+      notice={found.fallback ? t.untranslated : undefined}
+      draft={found.entry.data.draft}
+      headings={rendered.headings}
+      contentLanguage={found.entry.data.language}
+      published={found.entry.data.date}
+      variant="editorial"
+    >
+      <Content />
+    </Entry>
+  ) : (
+    <Base locale={locale} title={t.pageTitle(t.now)} description={t.now} unlocalizedPath="/now/">
+      <article class="wrap page-header">
+        <h1>{t.now}</h1>
+        <p>{t.noEntries}</p>
+      </article>
+    </Base>
+  )
+}
