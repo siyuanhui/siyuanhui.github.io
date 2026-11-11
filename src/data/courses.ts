@@ -23,3 +23,11 @@ export const courses = [
 ] as const;
 
 export type CourseCode = (typeof courses)[number]['code'];
+
+export function courseSlug(code: string) {
+  return code.trim().toLowerCase().replace(/\s+/g, '-');
+}
+
+export function courseBySlug(slug: string) {
+  return courses.find((course) => courseSlug(course.code) === slug);
+}

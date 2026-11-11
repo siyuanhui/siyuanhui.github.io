@@ -46,11 +46,32 @@ Garden notes use `topic` and `status` (`seedling`, `growing`, `evergreen`). Topi
 
 `kind: reference` marks a formula sheet. Set `course` to a code already on the site, such as `EECS 370`, when the note belongs to that course.
 
+A garden note or journal entry can also name one or more courses. Those entries are listed on `/garden/courses/eecs-370/` (the code, lowercased, with spaces as hyphens) and the `/zh/` copy:
+
+```yaml
+courses:
+  - EECS 370
+  - EECS 312
+```
+
+Projects already use a single `course` field (`EECS 312`). That is enough for the project to show up on that course's page.
+
+To publish a transcript, add the file at `public/transcript.pdf` and rebuild. The homepage and the coursework archive link it only when that file is present.
+
 Journal entries use `form` (`thought` or `essay`) and `category`:
 
 Essays: `literary-analysis`, `academic-writing`, `music-culture`, `philosophy`, `personal`.
 
 Other notes: `art`, `travel`, `everyday`, `tech`.
+
+To list a garden note or journal entry under an interest on the homepage, add:
+
+```yaml
+interests:
+  - music   # or art, or fitness
+```
+
+Music also includes journal entries whose `category` is `music-culture`. Art also includes entries whose `category` is `art`. No garden topic matches these three, and Fitness has no category of its own, so Fitness only lists entries with `interests: [fitness]`. The pages are `/interests/music/`, `/interests/art/`, and `/interests/fitness/` (and `/zh/interests/...`). Leave the field off when the note is not one of those.
 
 Optional essay fields: `analyzes` (the work discussed), `version` (`original` or `revised`), `course`, `pdf`, `audio`. A `pdf` or `audio` path is shown only when the file is actually in `public/`.
 

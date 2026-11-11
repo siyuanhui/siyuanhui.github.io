@@ -4,6 +4,11 @@
       "I am an undergraduate in Computer Engineering at the University of Michigan, Ann Arbor. I came to Michigan through the UM–SJTU Joint Institute dual degree program, having studied Electrical and Computer Engineering at Shanghai Jiao Tong University from 2024 to 2026.",
       "My interests are digital IC design, hardware verification, and computer architecture—from transistor-level circuit design to ISA toolchains and pipeline models. In Prof. Zetian Mi’s group at Michigan, I am reviewing deep learning approaches for interpreting in-situ RHEED images during GaN molecular beam epitaxy, and developing a research plan that connects image features to surface evolution during growth."
     ],
+    "interests": [
+      { "slug": "music", "label": "Music" },
+      { "slug": "art", "label": "Art" },
+      { "slug": "fitness", "label": "Fitness" }
+    ],
     "honors": [
       [
         "Successful Participant, MCM/ICM",
@@ -87,6 +92,11 @@
     "about": [
       "我是密歇根大学安娜堡分校计算机工程专业的本科生。经 UM–SJTU 联合学院（交大密西根学院）双学位项目来到密歇根，此前于 2024 至 2026 年在上海交通大学学习电子与计算机工程。",
       "我的兴趣集中在数字集成电路设计、硬件验证与计算机体系结构——从晶体管级电路设计，到指令集工具链与流水线模型。在密歇根大学 Zetian Mi 教授课题组，我正在调研用深度学习方法解读 GaN 分子束外延过程中的原位 RHEED 图像，并制定将图像特征与生长过程中表面演化联系起来的研究计划。"
+    ],
+    "interests": [
+      { "slug": "music", "label": "音乐" },
+      { "slug": "art", "label": "艺术" },
+      { "slug": "fitness", "label": "健身" }
     ],
     "honors": [
       [

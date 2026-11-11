@@ -26,8 +26,7 @@ for (const match of i18n.matchAll(/"((?:\\.|[^"\\])*)": "((?:\\.|[^"\\])*)"/g)) 
 
 const required = [
   'about.p1', 'about.p2',
-  'honor.mcm', 'honor.buddy', 'honor.upc', 'honor.cpho',
-  'date.jan2026', 'date.mar2025', 'date.jan2025', 'date.nov2023',
+  'date.mar2025',
   'umich.name', 'umich.role', 'umich.dates', 'umich.note',
   'sjtu.name', 'sjtu.role', 'sjtu.dates', 'sjtu.note',
   'navarra.name', 'navarra.role', 'navarra.dates', 'navarra.note',
@@ -102,6 +101,10 @@ const resumeLinked = corpus.includes('href="/resume.pdf"') || corpus.includes("h
 if (resumeOnDisk && !resumeLinked) failures.push('public/resume.pdf exists but the built site does not link /resume.pdf');
 if (!resumeOnDisk && resumeLinked) failures.push('resume.pdf is linked but public/resume.pdf is absent');
 if (resumeOnDisk && corpus.includes('isn’t on this site')) failures.push('résumé page still says the file is absent');
+const transcriptOnDisk = existsSync(join(root, 'public', 'transcript.pdf'));
+const transcriptLinked = corpus.includes('href="/transcript.pdf"') || corpus.includes("href='/transcript.pdf'");
+if (transcriptOnDisk && !transcriptLinked) failures.push('public/transcript.pdf exists but the built site does not link /transcript.pdf');
+if (!transcriptOnDisk && transcriptLinked) failures.push('transcript.pdf is linked but public/transcript.pdf is absent');
 
 const htmlFiles = files.filter((file) => file.endsWith('.html'));
 const idMap = new Map();
@@ -162,6 +165,18 @@ for (const href of [...external].filter((href) => !href.startsWith('https://siyu
   } catch (error) {
     console.log(`warn external unreachable ${href}: ${error.message}`);
   }
+}
+
+const sitemap = files.filter((file) => file.endsWith('.xml')).map((file) => readFileSync(file, 'utf8')).join('\n');
+for (const path of [
+  '/interests/music/', '/interests/art/', '/interests/fitness/',
+  '/zh/interests/music/', '/zh/interests/art/', '/zh/interests/fitness/',
+  '/garden/courses/eecs-311/', '/garden/courses/eecs-216/', '/garden/courses/eecs-270/',
+  '/garden/courses/eecs-280/', '/garden/courses/eecs-215/', '/garden/courses/eecs-301/',
+  '/garden/courses/eecs-370/', '/garden/courses/eecs-312/',
+  '/zh/garden/courses/eecs-370/', '/zh/garden/courses/eecs-312/',
+]) {
+  if (!sitemap.includes(path)) failures.push(`sitemap missing ${path}`);
 }
 
 if (!fileSet.has(join(dist, 'favicon.svg'))) failures.push('missing favicon');

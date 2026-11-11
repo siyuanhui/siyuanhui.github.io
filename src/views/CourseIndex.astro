@@ -1,8 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
-import { courses } from '../data/courses';
+import { courseSlug, courses } from '../data/courses';
 import { topicLabel } from '../data/topics';
 import { loadCollection, localize } from '../lib/content';
+import { publicFileExists } from '../lib/files';
 import { ui } from '../i18n/ui';
 import { localePath, type Locale } from '../lib/paths';
 
@@ -10,15 +11,12 @@ interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const t = ui(locale);
 const projects = localize(await loadCollection('projects'), locale);
-const pages = localize(await loadCollection('courses'), locale);
+const transcript = publicFileExists('/transcript.pdf') ? '/transcript.pdf' : null;
 const listed = courses.filter((course) => !course.progress);
 const current = courses.filter((course) => course.progress);
 
 function projectFor(code: string) {
   return projects.find((item) => item.entry.data.course === code);
-}
-function pageFor(code: string) {
-  return pages.find((item) => item.entry.data.code === code);
 }
 ---
 
@@ -27,6 +25,7 @@ function pageFor(code: string) {
     <p class="kicker"><a href={localePath(locale, '/garden/')}>{t.garden}</a></p>
     <h1>{t.coursework}</h1>
     <p class="lede">{t.noCoursePage}</p>
+    {transcript && <p class="more"><a href={transcript}>{t.transcript}</a></p>}
     <label class="sr-only" for="course-filter">{t.search}</label>
     <input id="course-filter" class="filter-input" type="search" placeholder={locale === 'zh' ? '筛选课程' : 'Filter courses'} />
   </header>
@@ -36,10 +35,9 @@ function pageFor(code: string) {
       listed.map((course) => {
         const title = locale === 'zh' ? course.zh : course.en;
         const project = projectFor(course.code);
-        const page = pageFor(course.code);
         return (
           <article class="course-row" data-course={title.toLowerCase()}>
-            <h3>{page ? <a href={localePath(locale, `/garden/courses/${page.entry.data.translationKey}/`)}>{title}</a> : title}</h3>
+            <h3><a href={localePath(locale, `/garden/courses/${courseSlug(course.code)}/`)}>{title}</a></h3>
             {project && (
               <p class="more">
                 <a href={localePath(locale, `/projects/${project.entry.data.translationKey}/`)}>{project.entry.data.title}</a>
@@ -54,12 +52,11 @@ function pageFor(code: string) {
       current.map((course) => {
         const title = locale === 'zh' ? course.zh : course.en;
         const project = projectFor(course.code);
-        const page = pageFor(course.code);
         const topic = 'topic' in course ? topicLabel(course.topic, locale) : '';
         return (
           <article class="course-row" data-course={`${title} ${topic}`.toLowerCase()}>
             <p class="meta">{topic}</p>
-            <h3>{page ? <a href={localePath(locale, `/garden/courses/${page.entry.data.translationKey}/`)}>{title}</a> : title}</h3>
+            <h3><a href={localePath(locale, `/garden/courses/${courseSlug(course.code)}/`)}>{title}</a></h3>
             {project && (
               <p class="more">
                 <a href={localePath(locale, `/projects/${project.entry.data.translationKey}/`)}>{project.entry.data.title}</a>

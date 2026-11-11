@@ -1,11 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
+import { courseSlug, courses } from '../data/courses';
 import { links } from '../data/links';
 import { categoryLabel, journalCategories } from '../data/journal';
 import { topicLabel, topics } from '../data/topics';
 import profile from '../data/profile.json';
 import { byOrder, featuredFirst, loadCollection, localize, nowEntry } from '../lib/content';
-import { resumeHref } from '../lib/files';
+import { publicFileExists, resumeHref } from '../lib/files';
 import { ui } from '../i18n/ui';
 import { formatDate } from '../lib/reading';
 import { localePath, type Locale } from '../lib/paths';
@@ -24,10 +25,16 @@ const [projects, research, garden, journal, now] = await Promise.all([
   nowEntry(locale),
 ]);
 const featured = projects.filter((entry) => entry.data.featured).slice(0, 3);
+const skillGroups = [
+  [t.programming, bio.skills.programming],
+  [t.toolsLabel, bio.skills.tools],
+  [t.languages, bio.skills.languages],
+] as const;
 const notes = garden.slice(0, 3);
 const essays = journal.slice(0, 1);
 const selected = featuredFirst([...garden, ...journal]).slice(0, 3);
 const resume = resumeHref();
+const transcript = publicFileExists('/transcript.pdf') ? '/transcript.pdf' : null;
 ---
 
 <Base locale={locale} title={t.siteTitle} description={t.siteDescription} unlocalizedPath="/">
@@ -47,6 +54,90 @@ const resume = resumeHref();
         <a href={links.linkedin} target="_blank" rel="me noopener noreferrer">LinkedIn</a>
         <a href={links.x} target="_blank" rel="me noopener noreferrer">X</a>
       </p>
+    </div>
+  </section>
+
+  <section id="about" class="block about-block">
+    <div class="wrap">
+      <h2>{t.about}</h2>
+      <div class="about-bio">
+        {bio.about.map((paragraph) => <p>{paragraph}</p>)}
+        <p class="more"><a href={localePath(locale, '/now/')}>{t.fullNow}</a></p>
+      </div>
+      <div class="about-grid">
+        <div>
+          <section id="education">
+            <h2>{t.education}</h2>
+            {
+              bio.education.map(([name, role, dates, note]) => (
+                <article class="edu">
+                  <div class="edu-head">
+                    <h3>{name}</h3>
+                    <p class="when">{dates}</p>
+                  </div>
+                  <p class="meta">{role}</p>
+                  <p>{note}</p>
+                </article>
+              ))
+            }
+            <h3 class="group-label">{t.relevantCoursework}</h3>
+            <ul>
+              {courses.filter((course) => !course.progress).map((course) => (
+                <li><a href={localePath(locale, `/garden/courses/${courseSlug(course.code)}/`)}>{locale === 'zh' ? course.zh : course.en}</a></li>
+              ))}
+            </ul>
+            <h3 class="group-label">{t.inProgressHeading}</h3>
+            <ul>
+              {courses.filter((course) => course.progress).map((course) => (
+                <li><a href={localePath(locale, `/garden/courses/${courseSlug(course.code)}/`)}>{locale === 'zh' ? course.zh : course.en}</a></li>
+              ))}
+            </ul>
+            <p class="more">
+              {transcript && <a href={transcript}>{t.transcript}</a>}
+              <a href={localePath(locale, '/garden/courses/')}>{t.courseworkArchive}</a>
+            </p>
+          </section>
+        </div>
+        <div class="about-side">
+          <section id="interests">
+            <h2>{t.interests}</h2>
+            <div class="skill-block">
+              <p>
+                {bio.interests.map((item, index) => (
+                  <>
+                    {index > 0 && ', '}
+                    <a href={localePath(locale, `/interests/${item.slug}/`)}>{item.label}</a>
+                  </>
+                ))}
+              </p>
+            </div>
+          </section>
+          <section id="teaching">
+            <h2>{t.teaching}</h2>
+            {
+              bio.teaching.map(([title, role, period, body]) => (
+                <article class="edu">
+                  <div class="edu-head">
+                    <h3>{title}</h3>
+                    <p class="when">{period}</p>
+                  </div>
+                  <p class="meta">{role}</p>
+                  {body && <p>{body}</p>}
+                </article>
+              ))
+            }
+          </section>
+          <section id="skills">
+            <h2>{t.skills}</h2>
+            {skillGroups.map(([label, items]) => (
+              <div class="skill-block">
+                <h3>{label}</h3>
+                <p>{items.join(', ')}</p>
+              </div>
+            ))}
+          </section>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -204,20 +295,16 @@ const resume = resumeHref();
     )
   }
 
-  <section class="block">
+  <section id="contact" class="block">
     <div class="wrap">
-      <div class="section-head">
-        <h2>{t.aboutContact}</h2>
-        <a href={localePath(locale, '/about/')}>{t.educationHonors}</a>
-      </div>
-      <div class="prose" style="max-width: 42rem; margin-top: 1rem;">
-        {bio.about.map((paragraph) => <p>{paragraph}</p>)}
-      </div>
+      <h2>{t.contact}</h2>
+      <p class="section-intro">{bio.contact}</p>
       <p class="hero-links">
         <a href={`mailto:${links.email}`}>{links.email}</a>
         <a href={links.github}>GitHub</a>
         <a href={links.linkedin}>LinkedIn</a>
         <a href={links.x}>X</a>
+        <a href={localePath(locale, '/resume/')}>{t.resume}</a>
         {resume && <a href={resume}>{t.resumeDownload}</a>}
       </p>
     </div>

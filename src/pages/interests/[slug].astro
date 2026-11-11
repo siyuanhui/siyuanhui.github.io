@@ -1,0 +1,12 @@
+---
+import { interestIds } from '../../data/interests';
+import View from '../../views/InterestIndex.astro';
+
+export function getStaticPaths() {
+  return interestIds.map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+---
+
+<View locale="en" slug={slug!} />

@@ -12,6 +12,12 @@ draft: true
 translationKey: template-technical-note
 topic: mathematics
 kind: note
+# Optional. music, art, or fitness — see CONTENT.md.
+# interests:
+#   - fitness
+# Optional course codes already on the site, e.g. EECS 370.
+# courses:
+#   - EECS 312
 ---
 
 This file is a template draft. It is not a note by Siyuan Hui, and it is left out of production builds.

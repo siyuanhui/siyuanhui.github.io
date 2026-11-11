@@ -1,9 +1,17 @@
 ---
+import { courseSlug, courses } from '../../../../data/courses';
 import { staticPaths } from '../../../../lib/content';
-import View from '../../../../views/CourseEntry.astro';
+import CourseEntry from '../../../../views/CourseEntry.astro';
+import CourseListing from '../../../../views/CourseListing.astro';
+
 export async function getStaticPaths() {
-  return staticPaths('courses');
+  const catalog = courses.map((course) => courseSlug(course.code));
+  const extra = (await staticPaths('courses')).filter((item) => !catalog.includes(String(item.params.slug)));
+  return [...catalog.map((slug) => ({ params: { slug } })), ...extra];
 }
+
 const { slug } = Astro.params;
+const known = courses.some((course) => courseSlug(course.code) === slug);
 ---
-<View locale="zh" slug={slug!} />
+
+{known ? <CourseListing locale="zh" slug={slug!} /> : <CourseEntry locale="zh" slug={slug!} />}
