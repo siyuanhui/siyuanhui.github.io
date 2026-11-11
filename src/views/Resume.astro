@@ -11,7 +11,7 @@ const t = ui(locale);
 const pdf = resumeHref();
 ---
 
-<Base locale={locale} title={t.pageTitle(t.resume)} description={t.resumePending} unlocalizedPath="/resume/">
+<Base locale={locale} title={t.pageTitle(t.resume)} description={pdf ? `${t.resume} — Siyuan Hui (PDF)` : t.resumePending} unlocalizedPath="/resume/">
   <article class="wrap" style="padding-bottom: 3.5rem;">
     <header class="page-header">
       <h1>{t.resume}</h1>
