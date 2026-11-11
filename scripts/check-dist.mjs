@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 const root = process.cwd();
@@ -97,9 +97,11 @@ for (const banned of [
 }
 
 if (!html.includes('data-i18n="about.p1"')) failures.push('legacy index.html was overwritten');
-if (corpus.includes('href="/resume.pdf"') || corpus.includes("href='/resume.pdf'")) {
-  failures.push('resume.pdf is linked but should stay absent until the file exists');
-}
+const resumeOnDisk = existsSync(join(root, 'public', 'resume.pdf'));
+const resumeLinked = corpus.includes('href="/resume.pdf"') || corpus.includes("href='/resume.pdf'");
+if (resumeOnDisk && !resumeLinked) failures.push('public/resume.pdf exists but the built site does not link /resume.pdf');
+if (!resumeOnDisk && resumeLinked) failures.push('resume.pdf is linked but public/resume.pdf is absent');
+if (resumeOnDisk && corpus.includes('isn’t on this site')) failures.push('résumé page still says the file is absent');
 
 const htmlFiles = files.filter((file) => file.endsWith('.html'));
 const idMap = new Map();
