@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 const root = process.cwd();
@@ -97,8 +97,11 @@ for (const banned of [
 }
 
 if (!html.includes('data-i18n="about.p1"')) failures.push('legacy index.html was overwritten');
-if (corpus.includes('href="/resume.pdf"') || corpus.includes("href='/resume.pdf'")) {
-  failures.push('resume.pdf is linked but should stay absent until the file exists');
+if (
+  !existsSync(new URL('../public/resume.pdf', import.meta.url)) &&
+  (corpus.includes('href="/resume.pdf"') || corpus.includes("href='/resume.pdf'"))
+) {
+  failures.push('resume.pdf is linked but public/resume.pdf does not exist');
 }
 
 const htmlFiles = files.filter((file) => file.endsWith('.html'));
