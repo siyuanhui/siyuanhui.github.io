@@ -26,8 +26,7 @@ for (const match of i18n.matchAll(/"((?:\\.|[^"\\])*)": "((?:\\.|[^"\\])*)"/g)) 
 
 const required = [
   'about.p1', 'about.p2',
-  'honor.mcm', 'honor.buddy', 'honor.upc', 'honor.cpho',
-  'date.jan2026', 'date.mar2025', 'date.jan2025', 'date.nov2023',
+  'date.mar2025',
   'umich.name', 'umich.role', 'umich.dates', 'umich.note',
   'sjtu.name', 'sjtu.role', 'sjtu.dates', 'sjtu.note',
   'navarra.name', 'navarra.role', 'navarra.dates', 'navarra.note',

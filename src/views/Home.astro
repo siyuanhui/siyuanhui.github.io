@@ -91,16 +91,11 @@ const resume = resumeHref();
           </section>
         </div>
         <div class="about-side">
-          <section id="honors">
-            <h2>{t.honors}</h2>
-            <ul class="plain-list">
-              {bio.honors.map(([text, date]) => (
-                <li class="honor">
-                  <span>{text}</span>
-                  <span class="when">{date}</span>
-                </li>
-              ))}
-            </ul>
+          <section id="interests">
+            <h2>{t.interests}</h2>
+            <div class="skill-block">
+              <p>{bio.interests.join(', ')}</p>
+            </div>
           </section>
           <section id="teaching">
             <h2>{t.teaching}</h2>
