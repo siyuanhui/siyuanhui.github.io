@@ -1,4 +1,22 @@
 ---
-import View from '../views/About.astro';
+import { absoluteUrl } from '../lib/paths';
+import { ui } from '../i18n/ui';
+
+const t = ui('en');
+const target = '/#about';
 ---
-<View locale="en" />
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{t.pageTitle(t.about)}</title>
+    <link rel="canonical" href={absoluteUrl(target)} />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <p><a href={target}>{t.about}</a></p>
+  </body>
+</html>

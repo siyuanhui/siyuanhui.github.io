@@ -27,12 +27,12 @@ Node 22 or newer.
 | Garden | `/garden/` | `/zh/garden/` |
 | Coursework | `/garden/courses/` | `/zh/garden/courses/` |
 | Journal | `/journal/` | `/zh/journal/` |
-| About | `/about/` | `/zh/about/` |
+| About | `/#about` | `/zh/#about` |
 | Résumé | `/resume/` | `/zh/resume/` |
 | Now | `/now/` | `/zh/now/` |
 | Search | `/search/` | `/zh/search/` |
 
-Old `?lang=zh` and `?lang=en` links redirect to the matching route, including the old section hashes (`#projects` → `/projects/`, `#experience` → `/research/`, `#about` and `#education` → `/about/`).
+Old `?lang=zh` and `?lang=en` links redirect to the matching route, including the old section hashes (`#projects` → `/projects/`, `#experience` → `/research/`, `#about` → `/#about`, `#education` → `/#education`). `/about/` and `/zh/about/` refresh to those homepage anchors.
 
 ## Résumé
 

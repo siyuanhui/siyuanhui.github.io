@@ -135,12 +135,12 @@ const jsonLd = {
         if (bare === '') bare = '/';
         var legacy = {
           '#top': '/',
-          '#about': '/about/',
-          '#education': '/about/#education',
+          '#about': '/#about',
+          '#education': '/#education',
           '#experience': '/research/',
           '#projects': '/projects/',
-          '#skills': '/about/#skills',
-          '#contact': '/about/#contact'
+          '#skills': '/#skills',
+          '#contact': '/#contact'
         };
         if ((bare === '/' || bare === '') && Object.prototype.hasOwnProperty.call(legacy, hash)) {
           var mapped = legacy[hash];
