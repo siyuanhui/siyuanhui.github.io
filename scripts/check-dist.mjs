@@ -163,6 +163,11 @@ for (const href of [...external].filter((href) => !href.startsWith('https://siyu
   }
 }
 
+const sitemap = files.filter((file) => file.endsWith('.xml')).map((file) => readFileSync(file, 'utf8')).join('\n');
+for (const path of ['/interests/music/', '/interests/art/', '/interests/fitness/', '/zh/interests/music/', '/zh/interests/art/', '/zh/interests/fitness/']) {
+  if (!sitemap.includes(path)) failures.push(`sitemap missing ${path}`);
+}
+
 if (!fileSet.has(join(dist, 'favicon.svg'))) failures.push('missing favicon');
 if (!fileSet.has(join(dist, 'sitemap-index.xml')) && !files.some((file) => file.endsWith('sitemap-index.xml'))) {
   failures.push('missing sitemap');

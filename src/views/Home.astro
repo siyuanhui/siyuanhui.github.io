@@ -94,7 +94,14 @@ const resume = resumeHref();
           <section id="interests">
             <h2>{t.interests}</h2>
             <div class="skill-block">
-              <p>{bio.interests.join(', ')}</p>
+              <p>
+                {bio.interests.map((item, index) => (
+                  <>
+                    {index > 0 && ', '}
+                    <a href={localePath(locale, `/interests/${item.slug}/`)}>{item.label}</a>
+                  </>
+                ))}
+              </p>
             </div>
           </section>
           <section id="teaching">

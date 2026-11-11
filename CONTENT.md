@@ -52,6 +52,15 @@ Essays: `literary-analysis`, `academic-writing`, `music-culture`, `philosophy`, 
 
 Other notes: `art`, `travel`, `everyday`, `tech`.
 
+To list a garden note or journal entry under an interest on the homepage, add:
+
+```yaml
+interests:
+  - music   # or art, or fitness
+```
+
+Music also includes journal entries whose `category` is `music-culture`. Art also includes entries whose `category` is `art`. No garden topic matches these three, and Fitness has no category of its own, so Fitness only lists entries with `interests: [fitness]`. The pages are `/interests/music/`, `/interests/art/`, and `/interests/fitness/` (and `/zh/interests/...`). Leave the field off when the note is not one of those.
+
 Optional essay fields: `analyzes` (the work discussed), `version` (`original` or `revised`), `course`, `pdf`, `audio`. A `pdf` or `audio` path is shown only when the file is actually in `public/`.
 
 ## Case studies

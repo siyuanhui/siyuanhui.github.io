@@ -1,6 +1,7 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { interestIds } from './data/interests';
 import { journalCategoryIds } from './data/journal';
 import { topicIds } from './data/topics';
 
@@ -8,6 +9,7 @@ const building = process.argv.includes('build');
 const pattern = building ? ['**/*.{md,mdx}', '!**/template-*'] : '**/*.{md,mdx}';
 
 const tags = z.array(z.string()).default([]);
+const interests = z.array(z.enum(interestIds)).default([]);
 
 const caseStudy = z.object({
   title: z.string(),
@@ -54,6 +56,7 @@ const garden = defineCollection({
     translationKey: z.string(),
     topic: z.enum(topicIds),
     kind: z.enum(['note', 'reference']).default('note'),
+    interests,
     course: z.string().optional(),
   }),
 });
@@ -72,6 +75,7 @@ const journal = defineCollection({
     translationKey: z.string(),
     form: z.enum(['thought', 'essay']).default('thought'),
     category: z.enum(journalCategoryIds).optional(),
+    interests,
     course: z.string().optional(),
     analyzes: z.string().optional(),
     version: z.enum(['original', 'revised']).optional(),

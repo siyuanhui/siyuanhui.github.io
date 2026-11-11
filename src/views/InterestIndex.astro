@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import { interestIds, interestSources, type InterestId } from '../data/interests';
+import profile from '../data/profile.json';
+import { localize, loadCollection } from '../lib/content';
+import { ui } from '../i18n/ui';
+import { formatDate } from '../lib/reading';
+import { localePath, type Locale } from '../lib/paths';
+
+interface Props {
+  locale: Locale;
+  slug: string;
+}
+
+const { locale, slug } = Astro.props;
+if (!interestIds.includes(slug as InterestId)) throw new Error(`Unknown interest: ${slug}`);
+const id = slug as InterestId;
+const t = ui(locale);
+const label = profile[locale].interests.find((item) => item.slug === id)?.label ?? id;
+const sources = interestSources[id];
+
+const [garden, journal] = await Promise.all([
+  loadCollection('garden').then((entries) => localize(entries, locale)),
+  loadCollection('journal').then((entries) => localize(entries, locale)),
+]);
+
+const entries = [...garden, ...journal]
+  .filter(({ entry }) => {
+    const tagged = 'interests' in entry.data && entry.data.interests.includes(id);
+    const category = 'category' in entry.data && entry.data.category && sources.categories.includes(entry.data.category);
+    const topic = 'topic' in entry.data && sources.topics.includes(entry.data.topic);
+    return Boolean(tagged || category || topic);
+  })
+  .sort((a, b) => b.entry.data.date.getTime() - a.entry.data.date.getTime());
+---
+
+<Base locale={locale} title={t.pageTitle(label)} description={entries.length ? label : t.nothingHere} unlocalizedPath={`/interests/${id}/`}>
+  <header class="page-header wrap">
+    <p class="kicker"><a href={`${localePath(locale, '/')}#interests`}>{t.interests}</a></p>
+    <h1>{label}</h1>
+  </header>
+  <div class="wrap" style="padding-bottom: 3.5rem;">
+    {
+      entries.length === 0 ? (
+        <p class="section-intro">{t.nothingHere}</p>
+      ) : (
+        <ol class="plain-list">
+          {entries.map(({ entry }) => {
+            const kind = 'topic' in entry.data ? 'garden' : 'journal';
+            return (
+              <li>
+                <p class="meta">{kind === 'garden' ? t.garden : t.journal} · {formatDate(entry.data.date, locale)}</p>
+                <h2><a href={localePath(locale, `/${kind}/${entry.data.translationKey}/`)}>{entry.data.title}</a></h2>
+                <p>{entry.data.description}</p>
+              </li>
+            );
+          })}
+        </ol>
+      )
+    }
+  </div>
+</Base>
