@@ -58,6 +58,7 @@ const garden = defineCollection({
     kind: z.enum(['note', 'reference']).default('note'),
     interests,
     course: z.string().optional(),
+    courses: z.array(z.string()).default([]),
   }),
 });
 
@@ -75,6 +76,7 @@ const journal = defineCollection({
     translationKey: z.string(),
     form: z.enum(['thought', 'essay']).default('thought'),
     category: z.enum(journalCategoryIds).optional(),
+    courses: z.array(z.string()).default([]),
     interests,
     course: z.string().optional(),
     analyzes: z.string().optional(),

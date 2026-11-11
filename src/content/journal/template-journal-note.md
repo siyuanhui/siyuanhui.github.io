@@ -12,6 +12,8 @@ category: music-culture
 # Optional. music, art, or fitness. This template's category (music-culture) already lists it under Music.
 # interests:
 #   - music
+# courses:
+#   - EECS 270
 ---
 
 A short note can be only a few sentences. No cover image is required.

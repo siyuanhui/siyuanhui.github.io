@@ -13,6 +13,8 @@ kind: reference
 # Optional. music, art, or fitness — see CONTENT.md.
 # interests:
 #   - art
+# courses:
+#   - EECS 312
 ---
 
 Replace this file, set `draft: false`, and give it a real `course` such as `EECS 312` when the sheet is your own summary. Do not paste instructor slides, textbook pages, or solution keys.

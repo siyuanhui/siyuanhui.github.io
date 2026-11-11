@@ -12,6 +12,8 @@ category: literary-analysis
 # Optional. music, art, or fitness — see CONTENT.md.
 # interests:
 #   - art
+# courses:
+#   - EECS 280
 analyzes: "TEMPLATE — not a real work"
 version: original
 pdf: /files/essays/template.pdf

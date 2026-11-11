@@ -1,0 +1,69 @@
+---
+import Base from '../layouts/Base.astro';
+import { courseBySlug, courseSlug } from '../data/courses';
+import { topicLabel } from '../data/topics';
+import { loadCollection, localize } from '../lib/content';
+import { ui } from '../i18n/ui';
+import { localePath, type Locale } from '../lib/paths';
+
+interface Props {
+  locale: Locale;
+  slug: string;
+}
+
+const { locale, slug } = Astro.props;
+const course = courseBySlug(slug);
+if (!course) throw new Error(`Unknown course: ${slug}`);
+const code = course.code;
+const t = ui(locale);
+const title = locale === 'zh' ? course.zh : course.en;
+const topic = 'topic' in course ? topicLabel(course.topic, locale) : '';
+
+function namesCourse(value: { course?: string; courses?: string[] } | undefined) {
+  if (!value) return false;
+  return value.course === code || Boolean(value.courses?.includes(code));
+}
+
+const [projects, garden, journal] = await Promise.all([
+  loadCollection('projects').then((entries) => localize(entries, locale)),
+  loadCollection('garden').then((entries) => localize(entries, locale)),
+  loadCollection('journal').then((entries) => localize(entries, locale)),
+]);
+
+const related = [
+  ...projects.filter(({ entry }) => entry.data.course === code).map((item) => ({ ...item, kind: 'projects' as const })),
+  ...garden.filter(({ entry }) => namesCourse(entry.data)).map((item) => ({ ...item, kind: 'garden' as const })),
+  ...journal.filter(({ entry }) => namesCourse(entry.data)).map((item) => ({ ...item, kind: 'journal' as const })),
+];
+---
+
+<Base
+  locale={locale}
+  title={t.pageTitle(title)}
+  description={related.length ? title : t.nothingHere}
+  unlocalizedPath={`/garden/courses/${courseSlug(course.code)}/`}
+>
+  <header class="page-header wrap">
+    <p class="kicker"><a href={localePath(locale, '/garden/courses/')}>{t.coursework}</a></p>
+    <h1>{title}</h1>
+    {topic && <p class="meta">{topic}</p>}
+    {course.progress && <p class="meta">{t.inProgressHeading}</p>}
+  </header>
+  <div class="wrap" style="padding-bottom: 3.5rem;">
+    {
+      related.length === 0 ? (
+        <p class="section-intro">{t.nothingHere}</p>
+      ) : (
+        <ol class="plain-list">
+          {related.map(({ entry, kind }) => (
+            <li>
+              <p class="meta">{kind === 'projects' ? t.projects : kind === 'garden' ? t.garden : t.journal}</p>
+              <h2><a href={localePath(locale, `/${kind}/${entry.data.translationKey}/`)}>{entry.data.title}</a></h2>
+              <p>{entry.data.description}</p>
+            </li>
+          ))}
+        </ol>
+      )
+    }
+  </div>
+</Base>

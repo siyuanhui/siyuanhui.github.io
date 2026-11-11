@@ -242,6 +242,7 @@ html[data-theme="dark"] .icon-sun { display: none; }
 .about-grid .plain-list > li { padding: 0.5rem 0; }
 .about-grid ul { margin: 0.35rem 0 0; padding-left: 1.15rem; }
 .about-grid li { margin: 0.15rem 0; }
+.about-grid .more a + a { margin-left: 1.25rem; }
 .section-head {
   display: flex;
   justify-content: space-between;

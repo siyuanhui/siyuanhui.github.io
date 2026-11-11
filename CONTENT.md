@@ -46,6 +46,18 @@ Garden notes use `topic` and `status` (`seedling`, `growing`, `evergreen`). Topi
 
 `kind: reference` marks a formula sheet. Set `course` to a code already on the site, such as `EECS 370`, when the note belongs to that course.
 
+A garden note or journal entry can also name one or more courses. Those entries are listed on `/garden/courses/eecs-370/` (the code, lowercased, with spaces as hyphens) and the `/zh/` copy:
+
+```yaml
+courses:
+  - EECS 370
+  - EECS 312
+```
+
+Projects already use a single `course` field (`EECS 312`). That is enough for the project to show up on that course's page.
+
+To publish a transcript, add the file at `public/transcript.pdf` and rebuild. The homepage and the coursework archive link it only when that file is present.
+
 Journal entries use `form` (`thought` or `essay`) and `category`:
 
 Essays: `literary-analysis`, `academic-writing`, `music-culture`, `philosophy`, `personal`.

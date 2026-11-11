@@ -1,12 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
-import { courses } from '../data/courses';
+import { courseSlug, courses } from '../data/courses';
 import { links } from '../data/links';
 import { categoryLabel, journalCategories } from '../data/journal';
 import { topicLabel, topics } from '../data/topics';
 import profile from '../data/profile.json';
 import { byOrder, featuredFirst, loadCollection, localize, nowEntry } from '../lib/content';
-import { resumeHref } from '../lib/files';
+import { publicFileExists, resumeHref } from '../lib/files';
 import { ui } from '../i18n/ui';
 import { formatDate } from '../lib/reading';
 import { localePath, type Locale } from '../lib/paths';
@@ -34,6 +34,7 @@ const notes = garden.slice(0, 3);
 const essays = journal.slice(0, 1);
 const selected = featuredFirst([...garden, ...journal]).slice(0, 3);
 const resume = resumeHref();
+const transcript = publicFileExists('/transcript.pdf') ? '/transcript.pdf' : null;
 ---
 
 <Base locale={locale} title={t.siteTitle} description={t.siteDescription} unlocalizedPath="/">
@@ -81,13 +82,20 @@ const resume = resumeHref();
             }
             <h3 class="group-label">{t.relevantCoursework}</h3>
             <ul>
-              {courses.filter((course) => !course.progress).map((course) => <li>{locale === 'zh' ? course.zh : course.en}</li>)}
+              {courses.filter((course) => !course.progress).map((course) => (
+                <li><a href={localePath(locale, `/garden/courses/${courseSlug(course.code)}/`)}>{locale === 'zh' ? course.zh : course.en}</a></li>
+              ))}
             </ul>
             <h3 class="group-label">{t.inProgressHeading}</h3>
             <ul>
-              {courses.filter((course) => course.progress).map((course) => <li>{locale === 'zh' ? course.zh : course.en}</li>)}
+              {courses.filter((course) => course.progress).map((course) => (
+                <li><a href={localePath(locale, `/garden/courses/${courseSlug(course.code)}/`)}>{locale === 'zh' ? course.zh : course.en}</a></li>
+              ))}
             </ul>
-            <p class="more"><a href={localePath(locale, '/garden/courses/')}>{t.courseworkArchive}</a></p>
+            <p class="more">
+              {transcript && <a href={transcript}>{t.transcript}</a>}
+              <a href={localePath(locale, '/garden/courses/')}>{t.courseworkArchive}</a>
+            </p>
           </section>
         </div>
         <div class="about-side">
