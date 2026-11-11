@@ -1,10 +1,10 @@
 import { existsSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
 
 export function publicFileExists(href: string) {
   if (!href.startsWith('/') || href.startsWith('//')) return false;
   const pathname = href.split(/[?#]/)[0] ?? href;
-  const file = fileURLToPath(new URL(`../../public${pathname}`, import.meta.url));
+  const file = join(process.cwd(), 'public', pathname);
   return existsSync(file);
 }
 
