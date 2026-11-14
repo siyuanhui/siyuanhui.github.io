@@ -9,27 +9,29 @@ const { locale } = Astro.props;
 const t = ui(locale);
 const entries = byOrder(localize(await loadCollection('projects'), locale).map((item) => item.entry));
 const title = t.pageTitle(t.projects);
+const spans = ['span-7', 'span-5', 'span-8', 'span-4', 'span-6', 'span-6'];
+const washes = ['', 'wash', 'wash-2', '', 'wash', ''];
 ---
 
 <Base locale={locale} title={title} description={t.siteDescription} unlocalizedPath="/projects/">
-  <header class="page-header wrap">
-    <h1>{t.projects}</h1>
-  </header>
-  <div class="wrap" style="padding-bottom: 3rem;">
-    <ol class="plain-list">
-      {
-        entries.map((entry) => (
-          <li>
-            <p class="meta">
-              {[entry.data.period, entry.data.status === 'in-progress' ? t.inProgress : undefined, entry.data.tools ?? entry.data.role]
-                .filter(Boolean)
-                .join(' · ')}
-            </p>
-            <h2><a href={localePath(locale, `/projects/${entry.data.translationKey}/`)}>{entry.data.title}</a></h2>
-            <p>{entry.data.description}</p>
-          </li>
-        ))
-      }
-    </ol>
+  <div class="board">
+    <header class="block span-8 block-end">
+      <h1>{t.projects}</h1>
+    </header>
+    <div class="block span-4 fill-red field" aria-hidden="true"></div>
+    {
+      entries.map((entry, index) => (
+        <a class:list={['block', spans[index % spans.length], washes[index % washes.length]]} href={localePath(locale, `/projects/${entry.data.translationKey}/`)}>
+          <p class="meta">
+            {[entry.data.period, entry.data.status === 'in-progress' ? t.inProgress : undefined, entry.data.tools ?? entry.data.role]
+              .filter(Boolean)
+              .join(' · ')}
+          </p>
+          <h2>{entry.data.title}</h2>
+          <p>{entry.data.description}</p>
+        </a>
+      ))
+    }
+    <div class="block span-4 fill-yellow field" aria-hidden="true"></div>
   </div>
 </Base>

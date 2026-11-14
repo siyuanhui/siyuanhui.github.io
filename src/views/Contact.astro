@@ -14,19 +14,17 @@ const resume = resumeHref();
 ---
 
 <Base locale={locale} title={t.pageTitle(t.contact)} description={bio.contact} unlocalizedPath="/contact/">
-  <article class="wrap page">
-    <header class="page-header" id="contact">
+  <div class="board">
+    <header class="block span-5 block-end" id="contact">
       <p class="kicker">{t.contact}</p>
       <h1>{t.contact}</h1>
-      <p class="lede">{bio.contact}</p>
-      <p class="hero-links">
-        <a href={`mailto:${links.email}`}>{links.email}</a>
-        <a href={links.github} target="_blank" rel="me noopener noreferrer">GitHub</a>
-        <a href={links.linkedin} target="_blank" rel="me noopener noreferrer">LinkedIn</a>
-        <a href={links.x} target="_blank" rel="me noopener noreferrer">X</a>
-        <a href={localePath(locale, '/resume/')}>{t.resume}</a>
-        {resume && <a href={resume}>{t.resumeDownload}</a>}
-      </p>
     </header>
-  </article>
+    <p class="block span-7 lede">{bio.contact}</p>
+    <a class="block span-6" href={`mailto:${links.email}`}>{links.email}</a>
+    <a class="block span-3 wash" href={links.github} target="_blank" rel="me noopener noreferrer">GitHub</a>
+    <a class="block span-3" href={links.linkedin} target="_blank" rel="me noopener noreferrer">LinkedIn</a>
+    <a class="block span-4 fill-yellow" href={links.x} target="_blank" rel="me noopener noreferrer">X</a>
+    <a class="block span-4" href={localePath(locale, '/resume/')}>{t.resume}</a>
+    {resume && <a class="block span-4 fill-blue" href={resume}>{t.resumeDownload}</a>}
+  </div>
 </Base>

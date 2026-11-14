@@ -35,27 +35,25 @@ const entries = [...garden, ...journal]
 ---
 
 <Base locale={locale} title={t.pageTitle(label)} description={entries.length ? label : t.nothingHere} unlocalizedPath={`/interests/${id}/`}>
-  <header class="page-header wrap">
-    <p class="kicker"><a href={localePath(locale, '/interests/')}>{t.interests}</a></p>
-    <h1>{label}</h1>
-  </header>
-  <div class="wrap" style="padding-bottom: 3.5rem;">
+  <div class="board">
+    <header class="block span-7 block-end">
+      <p class="kicker"><a href={localePath(locale, '/interests/')}>{t.interests}</a></p>
+      <h1>{label}</h1>
+    </header>
     {
       entries.length === 0 ? (
-        <p class="section-intro">{t.nothingHere}</p>
+        <p class="block span-5 fill-blue block-end">{t.nothingHere}</p>
       ) : (
-        <ol class="plain-list">
-          {entries.map(({ entry }) => {
-            const kind = 'topic' in entry.data ? 'garden' : 'journal';
-            return (
-              <li>
-                <p class="meta">{kind === 'garden' ? t.garden : t.journal} · {formatDate(entry.data.date, locale)}</p>
-                <h2><a href={localePath(locale, `/${kind}/${entry.data.translationKey}/`)}>{entry.data.title}</a></h2>
-                <p>{entry.data.description}</p>
-              </li>
-            );
-          })}
-        </ol>
+        entries.map(({ entry }, index) => {
+          const kind = 'topic' in entry.data ? 'garden' : 'journal';
+          return (
+            <a class:list={['block', ['span-5', 'span-7', 'span-4', 'span-8'][index] ?? 'span-4', index % 2 === 0 && 'wash']} href={localePath(locale, `/${kind}/${entry.data.translationKey}/`)}>
+              <p class="meta">{kind === 'garden' ? t.garden : t.journal} · {formatDate(entry.data.date, locale)}</p>
+              <h2>{entry.data.title}</h2>
+              <p>{entry.data.description}</p>
+            </a>
+          );
+        })
       )
     }
   </div>

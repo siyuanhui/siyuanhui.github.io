@@ -87,7 +87,7 @@ function current(href: string) {
       btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
       btn.setAttribute('aria-label', dark ? btn.getAttribute('data-label-light') : btn.getAttribute('data-label-dark'));
       var meta = document.querySelector('meta[name="theme-color"]');
-      if (meta) meta.setAttribute('content', dark ? '#141414' : '#F4F1EA');
+      if (meta) meta.setAttribute('content', dark ? '#121416' : '#F3F5F7');
     }
     sync();
     btn.addEventListener('click', function () {

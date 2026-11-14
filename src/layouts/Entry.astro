@@ -77,85 +77,87 @@ const pageTitle = t.pageTitle(title);
   published={published}
   noindex={draft}
 >
-  <article class="wrap" style="padding-bottom: 3.5rem;">
-    <header class="page-header">
+  <article class="board">
+    <header class:list={['block', 'block-end', rows.length > 0 || facts.length > 0 ? 'span-8' : 'span-12']}>
       {kicker && <p class="kicker">{kicker}</p>}
       <h1>{title}</h1>
       {lede && <p class="lede">{lede}</p>}
       {meta && <p class="meta">{meta}</p>}
-      {
-        rows.length > 0 && (
-          <dl class="summary">
-            {rows.map((row) => (
-              <div>
-                <dt>{row.label}</dt>
-                <dd>{row.value}</dd>
-              </div>
-            ))}
-            {links.map((link) => (
-              <div>
-                <dt>{link.label}</dt>
-                <dd>
-                  <a href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}>
-                    {link.text}
-                  </a>
-                </dd>
-              </div>
-            ))}
-          </dl>
-        )
-      }
-      {
-        facts.length > 0 && (
-          <>
-            <p class="kicker" style="margin-top: 1.3rem;">{t.keyFacts}</p>
-            <ul class="facts">
-              {facts.map((fact) => (
-                <li>{fact}</li>
-              ))}
-            </ul>
-          </>
-        )
-      }
     </header>
-    {draft && <p class="draft-banner">{t.draftBanner}</p>}
-    {notice && <p class="notice">{notice}</p>}
-    <div class:list={['article-grid', { solo: !showToc }]}>
-      <div class:list={['prose', variant === 'editorial' ? 'prose-editorial' : 'prose-technical']} lang={contentLang(contentLanguage)}>
-        <slot />
-        {audio && <audio controls preload="none" src={audio}><span class="sr-only">{t.audio}</span></audio>}
-        {pdf && (
-          <p class="more"><a href={pdf.href} download>{pdf.label}</a></p>
-        )}
-      </div>
-      {
-        showToc && (
-          <nav class="toc" aria-label={t.onThisPage}>
-            <p>{t.onThisPage}</p>
-            <ol>
-              {toc.map((heading) => (
-                <li class={heading.depth === 3 ? 'toc-sub' : undefined}>
-                  <a href={`#${heading.slug}`}>{heading.text}</a>
-                </li>
-              ))}
-            </ol>
-          </nav>
-        )
-      }
+    {
+      (rows.length > 0 || facts.length > 0) && (
+        <aside class="block span-4 wash">
+          {
+            rows.length > 0 && (
+              <dl class="summary">
+                {rows.map((row) => (
+                  <div>
+                    <dt>{row.label}</dt>
+                    <dd>{row.value}</dd>
+                  </div>
+                ))}
+                {links.map((link) => (
+                  <div>
+                    <dt>{link.label}</dt>
+                    <dd>
+                      <a href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}>
+                        {link.text}
+                      </a>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            )
+          }
+          {
+            facts.length > 0 && (
+              <>
+                <p class="kicker">{t.keyFacts}</p>
+                <ul class="facts">
+                  {facts.map((fact) => (
+                    <li>{fact}</li>
+                  ))}
+                </ul>
+              </>
+            )
+          }
+        </aside>
+      )
+    }
+    {draft && <p class="block span-12 draft-banner">{t.draftBanner}</p>}
+    {notice && <p class="block span-12 notice">{notice}</p>}
+    <div class:list={['block', 'prose', showToc ? 'span-8' : 'span-12', variant === 'editorial' ? 'prose-editorial' : 'prose-technical']} lang={contentLang(contentLanguage)}>
+      <slot />
+      {audio && <audio controls preload="none" src={audio}><span class="sr-only">{t.audio}</span></audio>}
+      {pdf && (
+        <p class="more"><a href={pdf.href} download>{pdf.label}</a></p>
+      )}
     </div>
     {
-      related.length > 0 && (
-        <section style="margin-top: 2.5rem;">
-          <h2>{t.related}</h2>
-          <ul class="plain-list">
-            {related.map((item) => (
-              <li>
-                {item.meta && <p class="meta">{item.meta}</p>}
-                <h3><a href={item.href}>{item.title}</a></h3>
+      showToc && (
+        <nav class="block span-4 toc" aria-label={t.onThisPage}>
+          <p class="kicker">{t.onThisPage}</p>
+          <ol>
+            {toc.map((heading) => (
+              <li class={heading.depth === 3 ? 'toc-sub' : undefined}>
+                <a href={`#${heading.slug}`}>{heading.text}</a>
               </li>
             ))}
-          </ul>
-        </section>
+          </ol>
+        </nav>
+      )
+    }
+    {
+      related.length > 0 && (
+        <>
+          <h2 class="block span-12">{t.related}</h2>
+          {related.map((item, index) => (
+            <a class:list={['block', ['span-7', 'span-5', 'span-4', 'span-4', 'span-4'][index] ?? 'span-4', index % 2 === 1 && 'wash']} href={item.href}>
+              {item.meta && <p class="meta">{item.meta}</p>}
+              <h3>{item.title}</h3>
+            </a>
+          ))}
+        </>
       )
     }
   </article>

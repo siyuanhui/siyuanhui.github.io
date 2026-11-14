@@ -12,26 +12,24 @@ const pdf = resumeHref();
 ---
 
 <Base locale={locale} title={t.pageTitle(t.resume)} description={pdf ? `${t.resume} — Siyuan Hui (PDF)` : t.resumePending} unlocalizedPath="/resume/">
-  <article class="wrap" style="padding-bottom: 3.5rem;">
-    <header class="page-header">
+  <div class="board">
+    <header class="block span-7 block-end">
       <h1>{t.resume}</h1>
-      {
-        pdf ? (
-          <p class="lede"><a href={pdf}>{t.resumeDownload}</a></p>
-        ) : (
-          <>
-            <p class="lede">{t.resumePending}</p>
-            <p>{t.resumeAsk}</p>
-          </>
-        )
-      }
-      <p class="hero-links">
-        <a href={`mailto:${links.email}`}>{links.email}</a>
-        <a href={links.github}>GitHub</a>
-        <a href={links.linkedin}>LinkedIn</a>
-        <a href={links.x}>X</a>
-      </p>
     </header>
-    {pdf && <iframe class="resume-frame" src={pdf} title={t.resume}></iframe>}
-  </article>
+    {
+      pdf ? (
+        <a class="block span-5 fill-red block-end" href={pdf}>{t.resumeDownload}</a>
+      ) : (
+        <div class="block span-5">
+          <p>{t.resumePending}</p>
+          <p>{t.resumeAsk}</p>
+        </div>
+      )
+    }
+    <a class="block span-3" href={`mailto:${links.email}`}>{links.email}</a>
+    <a class="block span-3 wash" href={links.github}>GitHub</a>
+    <a class="block span-3" href={links.linkedin}>LinkedIn</a>
+    <a class="block span-3 fill-yellow" href={links.x}>X</a>
+    {pdf && <iframe class="resume-frame span-12" src={pdf} title={t.resume}></iframe>}
+  </div>
 </Base>

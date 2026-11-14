@@ -10,12 +10,12 @@ const { locale } = Astro.props;
 const t = ui(locale);
 const tiles = [
   { href: '/research/', label: t.research, klass: 'cell-research fill-red' },
-  { href: '/projects/', label: t.projects, klass: 'cell-projects' },
+  { href: '/projects/', label: t.projects, klass: 'cell-projects wash' },
   { href: '/garden/', label: t.garden, klass: 'cell-garden fill-yellow' },
   { href: '/journal/', label: t.journal, klass: 'cell-journal fill-blue' },
-  { href: '/about/', label: t.about, klass: 'cell-about' },
-  { href: '/interests/', label: t.interests, klass: 'cell-interests' },
-  { href: '/resume/', label: t.resume, klass: 'cell-resume' },
+  { href: '/about/', label: t.about, klass: 'cell-about wash-2' },
+  { href: '/interests/', label: t.interests, klass: 'cell-interests wash' },
+  { href: '/resume/', label: t.resume, klass: 'cell-resume wash-2' },
   { href: '/contact/', label: t.contact, klass: 'cell-contact fill-blue' },
 ];
 ---

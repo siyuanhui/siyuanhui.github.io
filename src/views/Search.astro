@@ -48,17 +48,17 @@ records.push({
 ---
 
 <Base locale={locale} title={t.pageTitle(t.search)} description={t.searchLabel} unlocalizedPath="/search/">
-  <header class="page-header wrap">
-    <h1>{t.search}</h1>
-    <label class="sr-only" for="site-search">{t.searchLabel}</label>
-    <input id="site-search" class="search-input" type="search" placeholder={t.searchLabel} />
-  </header>
-  <div class="wrap" style="padding-bottom: 3rem;">
-    <p id="search-empty" class="section-intro" hidden>{t.noMatches}</p>
-    <ol id="search-results" class="plain-list">
+  <div class="board">
+    <header class="block span-12 block-end">
+      <h1>{t.search}</h1>
+      <label class="sr-only" for="site-search">{t.searchLabel}</label>
+      <input id="site-search" class="search-input" type="search" placeholder={t.searchLabel} />
+    </header>
+    <p id="search-empty" class="block span-4 fill-yellow" hidden>{t.noMatches}</p>
+    <ol id="search-results" class="contents">
       {
-        records.map((record) => (
-          <li data-search={`${record.title} ${record.text}`.toLowerCase()}>
+        records.map((record, index) => (
+          <li class:list={['block', index % 3 === 0 ? 'span-6' : 'span-3', index % 2 === 1 && 'wash']} data-search={`${record.title} ${record.text}`.toLowerCase()}>
             <p class="meta">{record.kind}</p>
             <h2><a href={record.href}>{record.title}</a></h2>
           </li>

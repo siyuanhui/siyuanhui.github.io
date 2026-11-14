@@ -16,42 +16,41 @@ const skillGroups = [
   [t.toolsLabel, bio.skills.tools],
   [t.languages, bio.skills.languages],
 ] as const;
+const eduSpan = ['span-8', 'span-7', 'span-5'];
+const teachSpan = ['span-5', 'span-4'];
 ---
 
 <Base locale={locale} title={t.pageTitle(t.about)} description={bio.about[0]} unlocalizedPath="/about/">
-  <article class="wrap page">
-    <header class="page-header">
+  <div class="board">
+    <header class="block span-5 block-end">
       <p class="kicker">{t.about}</p>
       <h1>{t.about}</h1>
     </header>
-    <div class="prose">
+    <div class="block span-7">
       {bio.about.map((paragraph) => <p>{paragraph}</p>)}
-      <p><a href={localePath(locale, '/now/')}>{t.fullNow}</a></p>
+      <p class="more"><a href={localePath(locale, '/now/')}>{t.fullNow}</a></p>
     </div>
 
-    <section id="education">
+    <section id="education" class="block span-4 fill-red block-end">
       <h2>{t.education}</h2>
-      {
-        bio.education.map(([name, role, dates, note]) => (
-          <article class="edu">
-            <div class="edu-head">
-              <h3>{name}</h3>
-              <p class="when">{dates}</p>
-            </div>
-            <p class="meta">{role}</p>
-            <p>{note}</p>
-          </article>
-        ))
-      }
+    </section>
+    {
+      bio.education.map(([name, role, dates, note], index) => (
+        <article class:list={['block', eduSpan[index] ?? 'span-6', index === 2 && 'wash']}>
+          <div class="edu-head">
+            <h3>{name}</h3>
+            <p class="when">{dates}</p>
+          </div>
+          <p class="meta">{role}</p>
+          <p>{note}</p>
+        </article>
+      ))
+    }
+
+    <section class="block span-8">
       <h3 class="group-label">{t.relevantCoursework}</h3>
       <ul>
         {courses.filter((course) => !course.progress).map((course) => (
-          <li><a href={localePath(locale, `/garden/courses/${courseSlug(course.code)}/`)}>{locale === 'zh' ? course.zh : course.en}</a></li>
-        ))}
-      </ul>
-      <h3 class="group-label">{t.inProgressHeading}</h3>
-      <ul>
-        {courses.filter((course) => course.progress).map((course) => (
           <li><a href={localePath(locale, `/garden/courses/${courseSlug(course.code)}/`)}>{locale === 'zh' ? course.zh : course.en}</a></li>
         ))}
       </ul>
@@ -60,31 +59,39 @@ const skillGroups = [
         <a href={localePath(locale, '/garden/courses/')}>{t.courseworkArchive}</a>
       </p>
     </section>
+    <section class="block span-4 fill-yellow">
+      <h3 class="group-label">{t.inProgressHeading}</h3>
+      <ul>
+        {courses.filter((course) => course.progress).map((course) => (
+          <li><a href={localePath(locale, `/garden/courses/${courseSlug(course.code)}/`)}>{locale === 'zh' ? course.zh : course.en}</a></li>
+        ))}
+      </ul>
+    </section>
 
-    <section id="teaching">
+    <section id="teaching" class="block span-3 fill-blue block-end">
       <h2>{t.teaching}</h2>
-      {
-        bio.teaching.map(([title, role, period, body]) => (
-          <article class="edu">
-            <div class="edu-head">
-              <h3>{title}</h3>
-              <p class="when">{period}</p>
-            </div>
-            <p class="meta">{role}</p>
-            {body && <p>{body}</p>}
-          </article>
-        ))
-      }
     </section>
+    {
+      bio.teaching.map(([title, role, period, body], index) => (
+        <article class:list={['block', teachSpan[index] ?? 'span-4', index === 1 && 'wash-2']}>
+          <div class="edu-head">
+            <h3>{title}</h3>
+            <p class="when">{period}</p>
+          </div>
+          <p class="meta">{role}</p>
+          {body && <p>{body}</p>}
+        </article>
+      ))
+    }
 
-    <section id="skills">
+    <section id="skills" class="block span-3 block-end wash-2">
       <h2>{t.skills}</h2>
-      {skillGroups.map(([label, items]) => (
-        <div class="skill-block">
-          <h3>{label}</h3>
-          <p>{items.join(', ')}</p>
-        </div>
-      ))}
     </section>
-  </article>
+    {skillGroups.map(([label, items], index) => (
+      <div class:list={['block', 'span-3', index === 1 && 'wash']}>
+        <h3 class="group-label">{label}</h3>
+        <p>{items.join(', ')}</p>
+      </div>
+    ))}
+  </div>
 </Base>

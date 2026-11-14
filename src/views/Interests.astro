@@ -8,23 +8,24 @@ interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const t = ui(locale);
 const items = profile[locale].interests;
+const spans = ['span-5', 'span-3', 'span-4'];
+const tones = ['fill-red', 'fill-yellow', 'fill-blue'];
 ---
 
 <Base locale={locale} title={t.pageTitle(t.interests)} description={t.interests} unlocalizedPath="/interests/">
-  <article class="wrap page">
-    <header class="page-header" id="interests">
+  <div class="board">
+    <header class="block span-7 block-end" id="interests">
       <p class="kicker">{t.interests}</p>
       <h1>{t.interests}</h1>
     </header>
-    <div class="mondrian mondrian-index">
-      {
-        items.map((item, index) => (
-          <a class:list={['cell', index === 0 && 'fill-red', index === 1 && 'fill-yellow', index === 2 && 'fill-blue']} href={localePath(locale, `/interests/${item.slug}/`)}>
-            <span class="cell-kicker">0{index + 1}</span>
-            <span class="cell-title">{item.label}</span>
-          </a>
-        ))
-      }
-    </div>
-  </article>
+    <div class="block span-5 fill-red field" aria-hidden="true"></div>
+    {
+      items.map((item, index) => (
+        <a class:list={['block', 'field', spans[index] ?? 'span-4', tones[index]]} href={localePath(locale, `/interests/${item.slug}/`)}>
+          <span class="cell-kicker">0{index + 1}</span>
+          <span class="cell-title">{item.label}</span>
+        </a>
+      ))
+    }
+  </div>
 </Base>
