@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import { links } from '../data/links';
+import profile from '../data/profile.json';
+import { resumeHref } from '../lib/files';
+import { ui } from '../i18n/ui';
+import { localePath, type Locale } from '../lib/paths';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const t = ui(locale);
+const bio = profile[locale];
+const resume = resumeHref();
+---
+
+<Base locale={locale} title={t.pageTitle(t.contact)} description={bio.contact} unlocalizedPath="/contact/">
+  <div class="board">
+    <header class="block span-5 block-end" id="contact">
+      <p class="kicker">{t.contact}</p>
+      <h1>{t.contact}</h1>
+    </header>
+    <p class="block span-7 lede">{bio.contact}</p>
+    <a class="block span-6" href={`mailto:${links.email}`}>{links.email}</a>
+    <a class="block span-3 wash" href={links.github} target="_blank" rel="me noopener noreferrer">GitHub</a>
+    <a class="block span-3" href={links.linkedin} target="_blank" rel="me noopener noreferrer">LinkedIn</a>
+    <a class="block span-4 fill-yellow" href={links.x} target="_blank" rel="me noopener noreferrer">X</a>
+    <a class="block span-4" href={localePath(locale, '/resume/')}>{t.resume}</a>
+    {resume && <a class="block span-4 fill-blue" href={resume}>{t.resumeDownload}</a>}
+  </div>
+</Base>

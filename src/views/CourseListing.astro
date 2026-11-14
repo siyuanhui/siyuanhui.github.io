@@ -43,26 +43,24 @@ const related = [
   description={related.length ? title : t.nothingHere}
   unlocalizedPath={`/garden/courses/${courseSlug(course.code)}/`}
 >
-  <header class="page-header wrap">
-    <p class="kicker"><a href={localePath(locale, '/garden/courses/')}>{t.coursework}</a></p>
-    <h1>{title}</h1>
-    {topic && <p class="meta">{topic}</p>}
-    {course.progress && <p class="meta">{t.inProgressHeading}</p>}
-  </header>
-  <div class="wrap" style="padding-bottom: 3.5rem;">
+  <div class="board">
+    <header class="block span-8 block-end">
+      <p class="kicker"><a href={localePath(locale, '/garden/courses/')}>{t.coursework}</a></p>
+      <h1>{title}</h1>
+      {topic && <p class="meta">{topic}</p>}
+    </header>
+    {course.progress ? <p class="block span-4 fill-yellow block-end">{t.inProgressHeading}</p> : <div class="block span-4 fill-red field" aria-hidden="true"></div>}
     {
       related.length === 0 ? (
-        <p class="section-intro">{t.nothingHere}</p>
+        <p class="block span-5 fill-blue block-end">{t.nothingHere}</p>
       ) : (
-        <ol class="plain-list">
-          {related.map(({ entry, kind }) => (
-            <li>
-              <p class="meta">{kind === 'projects' ? t.projects : kind === 'garden' ? t.garden : t.journal}</p>
-              <h2><a href={localePath(locale, `/${kind}/${entry.data.translationKey}/`)}>{entry.data.title}</a></h2>
-              <p>{entry.data.description}</p>
-            </li>
-          ))}
-        </ol>
+        related.map(({ entry, kind }, index) => (
+          <a class:list={['block', ['span-7', 'span-5', 'span-6', 'span-6'][index] ?? 'span-4', index % 2 === 1 && 'wash']} href={localePath(locale, `/${kind}/${entry.data.translationKey}/`)}>
+            <p class="meta">{kind === 'projects' ? t.projects : kind === 'garden' ? t.garden : t.journal}</p>
+            <h2>{entry.data.title}</h2>
+            <p>{entry.data.description}</p>
+          </a>
+        ))
       )
     }
   </div>

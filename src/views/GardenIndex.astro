@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import { topics } from '../data/topics';
 import { featuredFirst, loadCollection, localize } from '../lib/content';
 import { ui } from '../i18n/ui';
+import { packSpans } from '../lib/board';
 import { localePath, type Locale } from '../lib/paths';
 
 interface Props { locale: Locale; }
@@ -12,45 +13,47 @@ const notes = featuredFirst(localize(await loadCollection('garden'), locale).map
 const grouped = topics
   .map((topic) => ({ topic, notes: notes.filter((note) => note.data.topic === topic.id) }))
   .filter((group) => group.notes.length > 0);
+const tones = ['', 'wash', 'fill-yellow', '', 'fill-red', 'wash-2', '', 'fill-blue'];
+const chipSpans = packSpans((notes.length === 0 ? 1 : 0) + topics.length);
 ---
 
 <Base locale={locale} title={t.pageTitle(t.garden)} description={t.gardenIntro} unlocalizedPath="/garden/">
-  <header class="page-header wrap">
-    <h1>{t.garden}</h1>
-    <p class="lede">{t.gardenIntro}</p>
-    <p class="more"><a href={localePath(locale, '/garden/courses/')}>{t.courseworkArchive}</a></p>
-  </header>
-  <div class="wrap" style="padding-bottom: 3.5rem;">
+  <div class="board">
+    <header class="block span-7 block-end">
+      <h1>{t.garden}</h1>
+    </header>
+    <div class="block span-5">
+      <p>{t.gardenIntro}</p>
+      <p class="more"><a href={localePath(locale, '/garden/courses/')}>{t.courseworkArchive}</a></p>
+    </div>
     {
       notes.length === 0 ? (
-        <>
-          <p>{t.noNotes}</p>
-          <ul class="topic-line">
-            {topics.map((topic) => (
-              <li><span>{locale === 'zh' ? topic.zh : topic.en}</span></li>
-            ))}
-          </ul>
-        </>
+        <div class="board chips span-12">
+          <p class:list={['block', 'chip', `span-${chipSpans[0]}`, 'fill-blue']}>{t.noNotes}</p>
+          {topics.map((topic, index) => (
+            <p class:list={['block', 'chip', `span-${chipSpans[index + 1]}`, tones[index % tones.length]]}>
+              {locale === 'zh' ? topic.zh : topic.en}
+            </p>
+          ))}
+        </div>
       ) : (
         grouped.map((group) => (
-          <section id={group.topic.id} style="margin-top: 2rem;">
-            <h2>{locale === 'zh' ? group.topic.zh : group.topic.en}</h2>
-            <ol class="plain-list">
-              {group.notes.map((note) => (
-                <li>
-                  <p class="meta">{t[note.data.status]} · {note.data.tags.join(' · ')}</p>
-                  <h3><a href={localePath(locale, `/garden/${note.data.translationKey}/`)}>{note.data.title}</a></h3>
-                  <p>{note.data.description}</p>
-                </li>
-              ))}
-            </ol>
+          <section class="contents">
+            <h2 class="block span-12 fill-yellow" id={group.topic.id}>{locale === 'zh' ? group.topic.zh : group.topic.en}</h2>
+            {group.notes.map((note, index) => (
+              <a class:list={['block', `span-${packSpans(group.notes.length)[index]}`]} href={localePath(locale, `/garden/${note.data.translationKey}/`)}>
+                <p class="meta">{t[note.data.status]} · {note.data.tags.join(' · ')}</p>
+                <h3>{note.data.title}</h3>
+                <p>{note.data.description}</p>
+              </a>
+            ))}
           </section>
         ))
       )
     }
     {
       import.meta.env.DEV && (
-        <p class="notice" style="margin-top: 2rem;">
+        <p class="block span-4 notice">
           <a href={localePath(locale, '/garden/template-technical-note/')}>template-technical-note</a>
         </p>
       )

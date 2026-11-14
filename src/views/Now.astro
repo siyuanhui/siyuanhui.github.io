@@ -34,10 +34,12 @@ const Content = rendered?.Content;
     </Entry>
   ) : (
     <Base locale={locale} title={t.pageTitle(t.now)} description={t.now} unlocalizedPath="/now/">
-      <article class="wrap page-header">
-        <h1>{t.now}</h1>
-        <p>{t.noEntries}</p>
-      </article>
+      <div class="board">
+        <header class="block span-7 block-end">
+          <h1>{t.now}</h1>
+        </header>
+        <p class="block span-5 fill-blue block-end">{t.noEntries}</p>
+      </div>
     </Base>
   )
 }

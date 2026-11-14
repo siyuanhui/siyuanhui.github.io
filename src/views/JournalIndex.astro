@@ -4,55 +4,58 @@ import { categoryLabel, journalCategories } from '../data/journal';
 import { featuredFirst, loadCollection, localize } from '../lib/content';
 import { ui } from '../i18n/ui';
 import { formatDate } from '../lib/reading';
+import { packSpans } from '../lib/board';
 import { localePath, type Locale } from '../lib/paths';
 
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const t = ui(locale);
 const entries = featuredFirst(localize(await loadCollection('journal'), locale).map((item) => item.entry));
+const tones = ['', 'wash', 'fill-yellow', '', 'wash-2', 'fill-red', '', 'wash', 'fill-blue'];
+const chipCount = (entries.length === 0 ? 1 : 0) + journalCategories.length;
+const chipSpans = packSpans(chipCount);
 ---
 
 <Base locale={locale} title={t.pageTitle(t.journal)} description={t.journalIntro} unlocalizedPath="/journal/">
-  <header class="page-header wrap">
-    <h1>{t.journal}</h1>
-    <p class="lede">{t.journalIntro}</p>
-  </header>
-  <div class="wrap" style="padding-bottom: 3.5rem;">
-    <ul class="category-line">
+  <div class="board">
+    <header class="block span-7 block-end">
+      <h1>{t.journal}</h1>
+    </header>
+    <p class="block span-5 lede">{t.journalIntro}</p>
+    <div class="board chips span-12">
       {
-        journalCategories.map((category) => (
-          <li>
-            {entries.some((entry) => entry.data.category === category.id) ? (
-              <a href={`#${category.id}`}>{locale === 'zh' ? category.zh : category.en}</a>
-            ) : (
-              <span>{locale === 'zh' ? category.zh : category.en}</span>
-            )}
-          </li>
-        ))
+        entries.length === 0 ? <p class:list={['block', 'chip', `span-${chipSpans[0]}`, 'fill-blue']}>{t.noEntries}</p> : null
       }
-    </ul>
+      {
+        journalCategories.map((category, index) => {
+          const populated = entries.some((entry) => entry.data.category === category.id);
+          const label = locale === 'zh' ? category.zh : category.en;
+          const span = chipSpans[(entries.length === 0 ? 1 : 0) + index];
+          const klass = ['block', 'chip', `span-${span}`, tones[index % tones.length]];
+          return populated ? (
+            <a class:list={klass} href={`#${category.id}`}>{label}</a>
+          ) : (
+            <p class:list={klass}>{label}</p>
+          );
+        })
+      }
+    </div>
     {
-      entries.length === 0 ? (
-        <p class="section-intro">{t.noEntries}</p>
-      ) : (
-        journalCategories
-          .map((category) => ({ category, entries: entries.filter((entry) => entry.data.category === category.id) }))
-          .filter((group) => group.entries.length > 0)
-          .map((group) => (
-            <section id={group.category.id} style="margin-top: 2rem;">
-              <h2>{categoryLabel(group.category.id, locale)}</h2>
-              <ol class="plain-list">
-                {group.entries.map((entry) => (
-                  <li>
-                    <p class="meta">{formatDate(entry.data.date, locale)} · {entry.data.form === 'essay' ? t.essay : t.thought}</p>
-                    <h3><a href={localePath(locale, `/journal/${entry.data.translationKey}/`)}>{entry.data.title}</a></h3>
-                    <p>{entry.data.description}</p>
-                  </li>
-                ))}
-              </ol>
-            </section>
-          ))
-      )
+      journalCategories
+        .map((category) => ({ category, entries: entries.filter((entry) => entry.data.category === category.id) }))
+        .filter((group) => group.entries.length > 0)
+        .map((group) => (
+          <section class="contents">
+            <h2 class="block span-12" id={group.category.id}>{categoryLabel(group.category.id, locale)}</h2>
+            {group.entries.map((entry, index) => (
+              <a class:list={['block', `span-${packSpans(group.entries.length)[index]}`]} href={localePath(locale, `/journal/${entry.data.translationKey}/`)}>
+                <p class="meta">{formatDate(entry.data.date, locale)} · {entry.data.form === 'essay' ? t.essay : t.thought}</p>
+                <h3>{entry.data.title}</h3>
+                <p>{entry.data.description}</p>
+              </a>
+            ))}
+          </section>
+        ))
     }
   </div>
 </Base>

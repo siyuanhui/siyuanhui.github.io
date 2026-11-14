@@ -21,22 +21,25 @@ function projectFor(code: string) {
 ---
 
 <Base locale={locale} title={t.pageTitle(t.coursework)} description={t.relevantCoursework} unlocalizedPath="/garden/courses/">
-  <header class="page-header wrap">
-    <p class="kicker"><a href={localePath(locale, '/garden/')}>{t.garden}</a></p>
-    <h1>{t.coursework}</h1>
-    <p class="lede">{t.noCoursePage}</p>
-    {transcript && <p class="more"><a href={transcript}>{t.transcript}</a></p>}
-    <label class="sr-only" for="course-filter">{t.search}</label>
-    <input id="course-filter" class="filter-input" type="search" placeholder={locale === 'zh' ? '筛选课程' : 'Filter courses'} />
-  </header>
-  <div class="wrap" style="padding-bottom: 3rem;">
-    <h2 class="group-label">{t.relevantCoursework}</h2>
+  <div class="board">
+    <header class="block span-7 block-end">
+      <p class="kicker"><a href={localePath(locale, '/garden/')}>{t.garden}</a></p>
+      <h1>{t.coursework}</h1>
+      <label class="sr-only" for="course-filter">{t.search}</label>
+      <input id="course-filter" class="filter-input" type="search" placeholder={locale === 'zh' ? '筛选课程' : 'Filter courses'} />
+    </header>
+    <div class="block span-5">
+      <p>{t.noCoursePage}</p>
+      {transcript && <p class="more"><a href={transcript}>{t.transcript}</a></p>}
+    </div>
+    <h2 class="block span-4 fill-yellow chip">{t.relevantCoursework}</h2>
     {
-      listed.map((course) => {
+      listed.map((course, index) => {
         const title = locale === 'zh' ? course.zh : course.en;
         const project = projectFor(course.code);
+        const span = ['span-4', 'span-4', 'span-4', 'span-3', 'span-5', 'span-4'][index] ?? 'span-4';
         return (
-          <article class="course-row" data-course={title.toLowerCase()}>
+          <article class:list={['block', span, index % 2 === 1 && 'wash']} data-course={title.toLowerCase()}>
             <h3><a href={localePath(locale, `/garden/courses/${courseSlug(course.code)}/`)}>{title}</a></h3>
             {project && (
               <p class="more">
@@ -47,14 +50,14 @@ function projectFor(code: string) {
         );
       })
     }
-    <h2 class="group-label">{t.inProgressHeading}</h2>
+    <h2 class="block span-3 fill-blue chip">{t.inProgressHeading}</h2>
     {
-      current.map((course) => {
+      current.map((course, index) => {
         const title = locale === 'zh' ? course.zh : course.en;
         const project = projectFor(course.code);
         const topic = 'topic' in course ? topicLabel(course.topic, locale) : '';
         return (
-          <article class="course-row" data-course={`${title} ${topic}`.toLowerCase()}>
+          <article class:list={['block', index === 0 ? 'span-5' : 'span-4']} data-course={`${title} ${topic}`.toLowerCase()}>
             <p class="meta">{topic}</p>
             <h3><a href={localePath(locale, `/garden/courses/${courseSlug(course.code)}/`)}>{title}</a></h3>
             {project && (
