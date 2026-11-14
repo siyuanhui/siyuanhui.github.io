@@ -12,12 +12,14 @@ interface Props {
 const { locale, unlocalizedPath, enPath, zhPath } = Astro.props;
 const t = ui(locale);
 const items = [
-  ['/projects/', t.projects],
   ['/research/', t.research],
+  ['/projects/', t.projects],
   ['/garden/', t.garden],
   ['/journal/', t.journal],
-  ['#about', t.about],
+  ['/about/', t.about],
+  ['/interests/', t.interests],
   ['/resume/', t.resume],
+  ['/contact/', t.contact],
 ] as const;
 
 function current(href: string) {
@@ -85,7 +87,7 @@ function current(href: string) {
       btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
       btn.setAttribute('aria-label', dark ? btn.getAttribute('data-label-light') : btn.getAttribute('data-label-dark'));
       var meta = document.querySelector('meta[name="theme-color"]');
-      if (meta) meta.setAttribute('content', dark ? '#1C1F1E' : '#F8F6F0');
+      if (meta) meta.setAttribute('content', dark ? '#141414' : '#F4F1EA');
     }
     sync();
     btn.addEventListener('click', function () {

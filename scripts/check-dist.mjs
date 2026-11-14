@@ -175,6 +175,7 @@ for (const path of [
   '/garden/courses/eecs-280/', '/garden/courses/eecs-215/', '/garden/courses/eecs-301/',
   '/garden/courses/eecs-370/', '/garden/courses/eecs-312/',
   '/zh/garden/courses/eecs-370/', '/zh/garden/courses/eecs-312/',
+  '/about/', '/zh/about/', '/contact/', '/zh/contact/', '/interests/', '/zh/interests/',
 ]) {
   if (!sitemap.includes(path)) failures.push(`sitemap missing ${path}`);
 }

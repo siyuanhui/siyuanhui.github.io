@@ -36,7 +36,7 @@ const entries = [...garden, ...journal]
 
 <Base locale={locale} title={t.pageTitle(label)} description={entries.length ? label : t.nothingHere} unlocalizedPath={`/interests/${id}/`}>
   <header class="page-header wrap">
-    <p class="kicker"><a href={`${localePath(locale, '/')}#interests`}>{t.interests}</a></p>
+    <p class="kicker"><a href={localePath(locale, '/interests/')}>{t.interests}</a></p>
     <h1>{label}</h1>
   </header>
   <div class="wrap" style="padding-bottom: 3.5rem;">

@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import { links } from '../data/links';
+import profile from '../data/profile.json';
+import { resumeHref } from '../lib/files';
+import { ui } from '../i18n/ui';
+import { localePath, type Locale } from '../lib/paths';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const t = ui(locale);
+const bio = profile[locale];
+const resume = resumeHref();
+---
+
+<Base locale={locale} title={t.pageTitle(t.contact)} description={bio.contact} unlocalizedPath="/contact/">
+  <article class="wrap page">
+    <header class="page-header" id="contact">
+      <p class="kicker">{t.contact}</p>
+      <h1>{t.contact}</h1>
+      <p class="lede">{bio.contact}</p>
+      <p class="hero-links">
+        <a href={`mailto:${links.email}`}>{links.email}</a>
+        <a href={links.github} target="_blank" rel="me noopener noreferrer">GitHub</a>
+        <a href={links.linkedin} target="_blank" rel="me noopener noreferrer">LinkedIn</a>
+        <a href={links.x} target="_blank" rel="me noopener noreferrer">X</a>
+        <a href={localePath(locale, '/resume/')}>{t.resume}</a>
+        {resume && <a href={resume}>{t.resumeDownload}</a>}
+      </p>
+    </header>
+  </article>
+</Base>

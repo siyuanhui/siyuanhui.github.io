@@ -5,12 +5,8 @@ import '@fontsource/inter/latin-500.css';
 import '@fontsource/inter/latin-ext-500.css';
 import '@fontsource/inter/latin-600.css';
 import '@fontsource/inter/latin-ext-600.css';
-import '@fontsource/eb-garamond/latin-500.css';
-import '@fontsource/eb-garamond/latin-ext-500.css';
-import '@fontsource/eb-garamond/latin-500-italic.css';
-import '@fontsource/eb-garamond/latin-ext-500-italic.css';
-import '@fontsource/eb-garamond/latin-600.css';
-import '@fontsource/eb-garamond/latin-ext-600.css';
+import '@fontsource/inter/latin-700.css';
+import '@fontsource/inter/latin-ext-700.css';
 import 'katex/dist/katex.min.css';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
@@ -93,7 +89,7 @@ const jsonLd = {
     <link rel="alternate" hreflang="zh-CN" href={absoluteUrl(zhPath)} />
     <link rel="alternate" hreflang="x-default" href={absoluteUrl(enPath)} />
     <link rel="alternate" type="application/rss+xml" title={siteName(locale)} href={localePath(locale, '/rss.xml')} />
-    <meta name="theme-color" content="#F8F6F0" />
+    <meta name="theme-color" content="#F4F1EA" />
     <meta property="og:site_name" content={siteName(locale)} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -116,7 +112,7 @@ const jsonLd = {
           var theme = stored === 'dark' ? 'dark' : 'light';
           document.documentElement.setAttribute('data-theme', theme);
           var meta = document.querySelector('meta[name="theme-color"]');
-          if (meta) meta.setAttribute('content', theme === 'dark' ? '#1C1F1E' : '#F8F6F0');
+          if (meta) meta.setAttribute('content', theme === 'dark' ? '#141414' : '#F4F1EA');
         } catch (e) {}
 
         var params;
@@ -125,7 +121,6 @@ const jsonLd = {
         var q = (params.get('lang') || '').toLowerCase();
         var wantZh = q === 'zh' || q.indexOf('zh-') === 0;
         var wantEn = q === 'en' || q.indexOf('en-') === 0;
-        if (!wantZh && !wantEn) return;
 
         var path = window.location.pathname.replace(/\/index\.html$/, '/');
         if (path === '') path = '/';
@@ -135,13 +130,25 @@ const jsonLd = {
         if (bare === '') bare = '/';
         var legacy = {
           '#top': '/',
-          '#about': '/#about',
-          '#education': '/#education',
+          '#about': '/about/',
+          '#education': '/about/#education',
+          '#teaching': '/about/#teaching',
           '#experience': '/research/',
           '#projects': '/projects/',
-          '#skills': '/#skills',
-          '#contact': '/#contact'
+          '#skills': '/about/#skills',
+          '#interests': '/interests/',
+          '#contact': '/contact/'
         };
+        if (!wantZh && !wantEn && (bare === '/' || bare === '') && Object.prototype.hasOwnProperty.call(legacy, hash)) {
+          var direct = legacy[hash];
+          var directCut = direct.indexOf('#');
+          var directPath = directCut === -1 ? direct : direct.slice(0, directCut);
+          var directHash = directCut === -1 ? '' : direct.slice(directCut);
+          if (onZh) directPath = directPath === '/' ? '/zh/' : '/zh' + directPath;
+          if (directPath + directHash !== path + hash) window.location.replace(directPath + directHash);
+          return;
+        }
+        if (!wantZh && !wantEn) return;
         if ((bare === '/' || bare === '') && Object.prototype.hasOwnProperty.call(legacy, hash)) {
           var mapped = legacy[hash];
           var cut = mapped.indexOf('#');
