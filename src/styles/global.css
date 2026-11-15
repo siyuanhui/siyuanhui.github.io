@@ -226,9 +226,17 @@ a.block:hover .meta, a.block:hover .kicker, a.block:hover .when { color: #111; }
 .block h1 { font-size: clamp(2.6rem, 5.4vw, 4.6rem); }
 .block h2 { font-size: clamp(1.45rem, 2.2vw, 2.05rem); }
 .block .lede, .block .section-intro { max-width: none; }
-.block .prose, .block.prose { max-width: 68ch; }
-.block.prose { max-width: none; }
-.block.prose > * { min-width: 0; max-width: 100%; }
+.block .prose, .block.prose { max-width: none; }
+.block.prose > * { min-width: 0; max-width: 72ch; }
+.block.prose > pre,
+.block.prose > .astro-code,
+.block.prose > .table-scroll,
+.block.prose > audio { max-width: 100%; }
+.block.tile { min-height: 10rem; justify-content: flex-end; }
+.block.is-empty { color: var(--muted); background: var(--panel-2); }
+.block.is-empty h2, .block.is-empty .meta { color: var(--muted); }
+.toc-aside { position: static; margin-top: 0.8rem; }
+.aside-extend { grid-column: 9 / 13; grid-row: 1 / span 2; }
 .block .summary { margin-top: 0.4rem; }
 .chip { min-height: 6.5rem; justify-content: flex-end; }
 .field { min-height: 14rem; }
@@ -327,6 +335,8 @@ html[data-theme="light"] .astro-code span { color: var(--shiki-light) !important
 .katex-display { overflow-x: auto; }
 html[data-theme="dark"] .katex { color: var(--ink); }
 .footnotes { border-top: 3px solid var(--line); margin-top: 1.5rem; padding-top: 0.6rem; font-size: 0.92rem; }
+.prose .works-cited { margin: 0.4rem 0 0; }
+.prose .hanging-indent { padding-left: 1.5em; text-indent: -1.5em; margin: 0 0 0.55rem; }
 .notice, .draft-banner { border-left: var(--rule) solid var(--yellow); padding: 0.4rem 0.7rem; }
 .block.notice, .block.draft-banner { margin: 0; }
 .toc { position: sticky; top: 5rem; font-family: var(--mono); font-size: 0.78rem; }
@@ -353,6 +363,7 @@ html[data-theme="dark"] .katex { color: var(--ink); }
 @media (max-width: 860px) {
   .board { grid-template-columns: 1fr; }
   .board > * { grid-column: 1 / -1; }
+  .aside-extend { grid-row: auto; }
   .board.chips { grid-template-columns: 1fr 1fr; padding: 0; border-bottom: 0; }
   .board.chips > * { grid-column: span 1; min-height: 5.5rem; }
   .board.chips > *:last-child:nth-child(odd) { grid-column: 1 / -1; }

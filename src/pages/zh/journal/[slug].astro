@@ -1,9 +1,14 @@
 ---
-import { staticPaths } from '../../../lib/content';
+import { isJournalCategory } from '../../../data/journal';
+import { journalStaticPaths } from '../../../lib/content';
+import JournalCategory from '../../../views/JournalCategory.astro';
 import View from '../../../views/Writing.astro';
+
 export async function getStaticPaths() {
-  return staticPaths('journal');
+  return journalStaticPaths();
 }
+
 const { slug } = Astro.params;
 ---
-<View locale="zh" slug={slug!} collection="journal" />
+
+{isJournalCategory(slug!) ? <JournalCategory locale="zh" slug={slug!} /> : <View locale="zh" slug={slug!} collection="journal" />}

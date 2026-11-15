@@ -1,9 +1,14 @@
 ---
-import { staticPaths } from '../../lib/content';
+import { isGardenTopic } from '../../data/topics';
+import { gardenStaticPaths } from '../../lib/content';
+import GardenTopic from '../../views/GardenTopic.astro';
 import View from '../../views/Writing.astro';
+
 export async function getStaticPaths() {
-  return staticPaths('garden');
+  return gardenStaticPaths();
 }
+
 const { slug } = Astro.params;
 ---
-<View locale="en" slug={slug!} collection="garden" />
+
+{isGardenTopic(slug!) ? <GardenTopic locale="en" slug={slug!} /> : <View locale="en" slug={slug!} collection="garden" />}

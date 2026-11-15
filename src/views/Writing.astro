@@ -39,8 +39,17 @@ if ('version' in data && data.version === 'original') bits.push(t.originalVersio
 if ('version' in data && data.version === 'revised') bits.push(t.revisedVersion);
 
 let kicker = collection === 'garden' ? t.garden : t.journal;
-if (collection === 'garden' && 'topic' in data) kicker = topicLabel(data.topic, locale);
-if (collection === 'journal' && 'category' in data && data.category) kicker = categoryLabel(data.category, locale);
+let kickerHref = localePath(locale, `/${collection}/`);
+if (collection === 'garden' && 'topic' in data) {
+  kicker = topicLabel(data.topic, locale);
+  kickerHref = localePath(locale, `/garden/${data.topic}/`);
+}
+if (collection === 'journal' && 'category' in data && data.category) {
+  kicker = categoryLabel(data.category, locale);
+  kickerHref = localePath(locale, `/journal/${data.category}/`);
+}
+const rows =
+  'analyzes' in data && data.analyzes ? [{ label: t.analyzes, value: data.analyzes }] : [];
 
 const pdf =
   'pdf' in data && data.pdf && publicFileExists(data.pdf)
@@ -55,8 +64,10 @@ const audio = 'audio' in data && data.audio && publicFileExists(data.audio) ? da
   description={data.description}
   unlocalizedPath={`/${collection}/${data.translationKey}/`}
   kicker={kicker}
+  kickerHref={kickerHref}
   lede={data.description}
   meta={bits.join(' · ')}
+  rows={rows}
   notice={fallback ? t.untranslated : undefined}
   draft={data.draft}
   headings={headings}
@@ -67,6 +78,5 @@ const audio = 'audio' in data && data.audio && publicFileExists(data.audio) ? da
   audio={audio}
   variant="editorial"
 >
-  {'analyzes' in data && data.analyzes && <p class="meta">{t.analyzes} {data.analyzes}</p>}
   <Content />
 </Entry>

@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import { isGardenTopic, topicLabel } from '../data/topics';
+import { featuredFirst, loadCollection, localize } from '../lib/content';
+import { ui } from '../i18n/ui';
+import { packSpans } from '../lib/board';
+import { localePath, type Locale } from '../lib/paths';
+
+interface Props {
+  locale: Locale;
+  slug: string;
+}
+
+const { locale, slug } = Astro.props;
+if (!isGardenTopic(slug)) throw new Error(`Unknown garden topic: ${slug}`);
+const t = ui(locale);
+const label = topicLabel(slug, locale);
+const notes = featuredFirst(
+  localize(await loadCollection('garden'), locale)
+    .map((item) => item.entry)
+    .filter((note) => note.data.topic === slug),
+);
+const spans = packSpans(notes.length);
+---
+
+<Base locale={locale} title={t.pageTitle(label)} description={label} unlocalizedPath={`/garden/${slug}/`}>
+  <div class="board">
+    <header class="block span-7 block-end">
+      <p class="kicker"><a href={localePath(locale, '/garden/')}>{t.garden}</a></p>
+      <h1>{label}</h1>
+    </header>
+    <p class="block span-5 lede">{notes.length ? t.noteCount(notes.length) : t.noNotes}</p>
+    {
+      notes.map((note, index) => (
+        <a class:list={['block', `span-${spans[index]}`, index % 2 === 1 && 'wash']} href={localePath(locale, `/garden/${note.data.translationKey}/`)}>
+          <p class="meta">{t[note.data.status]} · {note.data.tags.join(' · ')}</p>
+          <h2>{note.data.title}</h2>
+          <p>{note.data.description}</p>
+        </a>
+      ))
+    }
+  </div>
+</Base>

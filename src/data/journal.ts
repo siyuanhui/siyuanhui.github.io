@@ -30,3 +30,8 @@ export function categoryLabel(id: string, locale: 'en' | 'zh') {
   if (!category) return id;
   return locale === 'zh' ? category.zh : category.en;
 }
+
+export function isJournalCategory(slug: string): slug is JournalCategoryId {
+  return (journalCategoryIds as readonly string[]).includes(slug);
+}
+

@@ -1,5 +1,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import type { Locale } from './paths';
+import { journalCategoryIds } from '../data/journal';
+import { topicIds } from '../data/topics';
 
 export type CollectionName = 'projects' | 'research' | 'garden' | 'journal' | 'courses';
 type AnyEntry = CollectionEntry<CollectionName>;
@@ -97,3 +99,22 @@ export function relatedOf<T extends AnyEntry>(entries: T[], current: T, locale: 
     .sort((a, b) => b.score - a.score)
     .slice(0, 3);
 }
+
+export async function journalStaticPaths() {
+  const posts = await staticPaths('journal');
+  const slugs = new Set(posts.map((item) => String(item.params.slug)));
+  for (const id of journalCategoryIds) {
+    if (slugs.has(id)) throw new Error(`Journal post slug collides with category "${id}"`);
+  }
+  return [...posts, ...journalCategoryIds.map((slug) => ({ params: { slug } }))];
+}
+
+export async function gardenStaticPaths() {
+  const notes = await staticPaths('garden');
+  const slugs = new Set(notes.map((item) => String(item.params.slug)));
+  for (const id of topicIds) {
+    if (slugs.has(id)) throw new Error(`Garden note slug collides with topic "${id}"`);
+  }
+  return [...notes, ...topicIds.map((slug) => ({ params: { slug } }))];
+}
+
