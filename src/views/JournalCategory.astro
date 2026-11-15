@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import { categoryLabel, isJournalCategory } from '../data/journal';
+import { featuredFirst, loadCollection, localize } from '../lib/content';
+import { ui } from '../i18n/ui';
+import { formatDate } from '../lib/reading';
+import { packSpans } from '../lib/board';
+import { localePath, type Locale } from '../lib/paths';
+
+interface Props {
+  locale: Locale;
+  slug: string;
+}
+
+const { locale, slug } = Astro.props;
+if (!isJournalCategory(slug)) throw new Error(`Unknown journal category: ${slug}`);
+const t = ui(locale);
+const label = categoryLabel(slug, locale);
+const entries = featuredFirst(
+  localize(await loadCollection('journal'), locale)
+    .map((item) => item.entry)
+    .filter((entry) => entry.data.category === slug),
+);
+const spans = packSpans(entries.length);
+---
+
+<Base locale={locale} title={t.pageTitle(label)} description={label} unlocalizedPath={`/journal/${slug}/`}>
+  <div class="board">
+    <header class="block span-7 block-end">
+      <p class="kicker"><a href={localePath(locale, '/journal/')}>{t.journal}</a></p>
+      <h1>{label}</h1>
+    </header>
+    <p class="block span-5 lede">{entries.length ? t.entryCount(entries.length) : t.noEntries}</p>
+    {
+      entries.map((entry, index) => (
+        <a class:list={['block', `span-${spans[index]}`, index % 2 === 1 && 'wash']} href={localePath(locale, `/journal/${entry.data.translationKey}/`)}>
+          <p class="meta">{formatDate(entry.data.date, locale)} · {entry.data.form === 'essay' ? t.essay : t.thought}</p>
+          <h2>{entry.data.title}</h2>
+          <p>{entry.data.description}</p>
+        </a>
+      ))
+    }
+  </div>
+</Base>

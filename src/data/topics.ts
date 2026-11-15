@@ -27,3 +27,8 @@ export function topicLabel(id: string, locale: 'en' | 'zh') {
   if (!topic) return id;
   return locale === 'zh' ? topic.zh : topic.en;
 }
+
+export function isGardenTopic(slug: string): slug is TopicId {
+  return (topicIds as readonly string[]).includes(slug);
+}
+

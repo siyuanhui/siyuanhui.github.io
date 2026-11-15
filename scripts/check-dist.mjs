@@ -176,6 +176,10 @@ for (const path of [
   '/garden/courses/eecs-370/', '/garden/courses/eecs-312/',
   '/zh/garden/courses/eecs-370/', '/zh/garden/courses/eecs-312/',
   '/about/', '/zh/about/', '/contact/', '/zh/contact/', '/interests/', '/zh/interests/',
+  '/journal/academic-writing/', '/zh/journal/academic-writing/',
+  '/journal/literary-analysis/', '/zh/journal/literary-analysis/',
+  '/garden/computer-architecture/', '/zh/garden/computer-architecture/',
+  '/garden/courses/', '/zh/garden/courses/',
 ]) {
   if (!sitemap.includes(path)) failures.push(`sitemap missing ${path}`);
 }

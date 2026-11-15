@@ -1,20 +1,23 @@
 ---
 import Base from '../layouts/Base.astro';
+import { courses } from '../data/courses';
 import { topics } from '../data/topics';
 import { featuredFirst, loadCollection, localize } from '../lib/content';
 import { ui } from '../i18n/ui';
-import { packSpans } from '../lib/board';
+import { formatDate } from '../lib/reading';
 import { localePath, type Locale } from '../lib/paths';
 
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const t = ui(locale);
 const notes = featuredFirst(localize(await loadCollection('garden'), locale).map((item) => item.entry));
-const grouped = topics
-  .map((topic) => ({ topic, notes: notes.filter((note) => note.data.topic === topic.id) }))
-  .filter((group) => group.notes.length > 0);
 const tones = ['', 'wash', 'fill-yellow', '', 'fill-red', 'wash-2', '', 'fill-blue'];
-const chipSpans = packSpans((notes.length === 0 ? 1 : 0) + topics.length);
+
+const topicGroups = topics.map((topic, index) => {
+  const items = notes.filter((note) => note.data.topic === topic.id);
+  const latest = items[0]?.data.date;
+  return { topic, items, latest, tone: tones[index % tones.length] };
+});
 ---
 
 <Base locale={locale} title={t.pageTitle(t.garden)} description={t.gardenIntro} unlocalizedPath="/garden/">
@@ -22,34 +25,35 @@ const chipSpans = packSpans((notes.length === 0 ? 1 : 0) + topics.length);
     <header class="block span-7 block-end">
       <h1>{t.garden}</h1>
     </header>
-    <div class="block span-5">
-      <p>{t.gardenIntro}</p>
-      <p class="more"><a href={localePath(locale, '/garden/courses/')}>{t.courseworkArchive}</a></p>
-    </div>
+    <p class="block span-5 lede">{t.gardenIntro}</p>
+    <a class:list={['block', 'tile', 'span-4', 'fill-blue']} href={localePath(locale, '/garden/courses/')}>
+      <p class="meta">{t.courseCount(courses.length)}</p>
+      <h2>{t.coursework}</h2>
+    </a>
     {
-      notes.length === 0 ? (
-        <div class="board chips span-12">
-          <p class:list={['block', 'chip', `span-${chipSpans[0]}`, 'fill-blue']}>{t.noNotes}</p>
-          {topics.map((topic, index) => (
-            <p class:list={['block', 'chip', `span-${chipSpans[index + 1]}`, tones[index % tones.length]]}>
-              {locale === 'zh' ? topic.zh : topic.en}
-            </p>
-          ))}
-        </div>
-      ) : (
-        grouped.map((group) => (
-          <section class="contents">
-            <h2 class="block span-12 fill-yellow" id={group.topic.id}>{locale === 'zh' ? group.topic.zh : group.topic.en}</h2>
-            {group.notes.map((note, index) => (
-              <a class:list={['block', `span-${packSpans(group.notes.length)[index]}`]} href={localePath(locale, `/garden/${note.data.translationKey}/`)}>
-                <p class="meta">{t[note.data.status]} · {note.data.tags.join(' · ')}</p>
-                <h3>{note.data.title}</h3>
-                <p>{note.data.description}</p>
-              </a>
-            ))}
-          </section>
-        ))
-      )
+      topicGroups.map((group) => {
+        const label = locale === 'zh' ? group.topic.zh : group.topic.en;
+        const count = group.items.length;
+        const klass = ['block', 'tile', 'span-4'];
+        if (count > 0) {
+          const fills = ['fill-yellow', 'fill-red', 'wash', 'fill-blue'];
+          const populatedIndex = topicGroups.filter((item) => item.items.length > 0).findIndex((item) => item.topic.id === group.topic.id);
+          klass.push(fills[populatedIndex % fills.length] ?? group.tone);
+          const meta = [t.noteCount(count), group.latest ? formatDate(group.latest, locale) : undefined].filter(Boolean).join(' · ');
+          return (
+            <a class:list={klass} href={localePath(locale, `/garden/${group.topic.id}/`)}>
+              <p class="meta">{meta}</p>
+              <h2>{label}</h2>
+            </a>
+          );
+        }
+        return (
+          <div class:list={[...klass, 'is-empty']}>
+            <p class="meta">{t.nothingHere}</p>
+            <h2>{label}</h2>
+          </div>
+        );
+      })
     }
     {
       import.meta.env.DEV && (

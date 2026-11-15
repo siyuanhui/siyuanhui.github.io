@@ -25,6 +25,7 @@ interface Props {
   description: string;
   unlocalizedPath: string;
   kicker?: string;
+  kickerHref?: string;
   lede?: string;
   meta?: string;
   rows?: Row[];
@@ -47,6 +48,7 @@ const {
   description,
   unlocalizedPath,
   kicker,
+  kickerHref,
   lede,
   meta,
   rows = [],
@@ -65,6 +67,7 @@ const {
 const t = ui(locale);
 const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
 const showToc = toc.length >= 2;
+const hasAside = rows.length > 0 || facts.length > 0 || links.length > 0 || showToc || Boolean(meta);
 const pageTitle = t.pageTitle(title);
 ---
 
@@ -78,17 +81,23 @@ const pageTitle = t.pageTitle(title);
   noindex={draft}
 >
   <article class="board">
-    <header class:list={['block', 'block-end', rows.length > 0 || facts.length > 0 ? 'span-8' : 'span-12']}>
-      {kicker && <p class="kicker">{kicker}</p>}
+    <header class:list={['block', 'block-end', hasAside ? 'span-8' : 'span-12']}>
+      {kicker && (
+        kickerHref ? (
+          <p class="kicker"><a href={kickerHref}>{kicker}</a></p>
+        ) : (
+          <p class="kicker">{kicker}</p>
+        )
+      )}
       <h1>{title}</h1>
       {lede && <p class="lede">{lede}</p>}
-      {meta && <p class="meta">{meta}</p>}
     </header>
     {
-      (rows.length > 0 || facts.length > 0) && (
-        <aside class="block span-4 wash">
+      hasAside && (
+        <aside class:list={['block', 'span-4', 'wash', !(draft || notice) && 'aside-extend']}>
+          {meta && <p class="meta">{meta}</p>}
           {
-            rows.length > 0 && (
+            (rows.length > 0 || links.length > 0) && (
               <dl class="summary">
                 {rows.map((row) => (
                   <div>
@@ -121,32 +130,32 @@ const pageTitle = t.pageTitle(title);
               </>
             )
           }
+          {
+            showToc && (
+              <nav class="toc toc-aside" aria-label={t.onThisPage}>
+                <p class="kicker">{t.onThisPage}</p>
+                <ol>
+                  {toc.map((heading) => (
+                    <li class={heading.depth === 3 ? 'toc-sub' : undefined}>
+                      <a href={`#${heading.slug}`}>{heading.text}</a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            )
+          }
         </aside>
       )
     }
     {draft && <p class="block span-12 draft-banner">{t.draftBanner}</p>}
     {notice && <p class="block span-12 notice">{notice}</p>}
-    <div class:list={['block', 'prose', showToc ? 'span-8' : 'span-12', variant === 'editorial' ? 'prose-editorial' : 'prose-technical']} lang={contentLang(contentLanguage)}>
+    <div class:list={['block', 'prose', hasAside ? 'span-8' : 'span-12', variant === 'editorial' ? 'prose-editorial' : 'prose-technical']} lang={contentLang(contentLanguage)}>
       <slot />
       {audio && <audio controls preload="none" src={audio}><span class="sr-only">{t.audio}</span></audio>}
       {pdf && (
         <p class="more"><a href={pdf.href} download>{pdf.label}</a></p>
       )}
     </div>
-    {
-      showToc && (
-        <nav class="block span-4 toc" aria-label={t.onThisPage}>
-          <p class="kicker">{t.onThisPage}</p>
-          <ol>
-            {toc.map((heading) => (
-              <li class={heading.depth === 3 ? 'toc-sub' : undefined}>
-                <a href={`#${heading.slug}`}>{heading.text}</a>
-              </li>
-            ))}
-          </ol>
-        </nav>
-      )
-    }
     {
       related.length > 0 && (
         <>
