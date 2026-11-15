@@ -72,16 +72,21 @@ const teachSpan = ['span-5', 'span-4'];
       <h2>{t.teaching}</h2>
     </section>
     {
-      bio.teaching.map(([title, role, period, body], index) => (
-        <article class:list={['block', teachSpan[index] ?? 'span-4', index === 1 && 'wash-2']}>
-          <div class="edu-head">
-            <h3>{title}</h3>
-            <p class="when">{period}</p>
-          </div>
-          <p class="meta">{role}</p>
-          {body && <p>{body}</p>}
-        </article>
-      ))
+      bio.teaching.map((item, index) => {
+        const Tag = item.href ? 'a' : 'article';
+        const extras = item.href ? { href: localePath(locale, item.href) } : {};
+        return (
+          <Tag class:list={['block', teachSpan[index] ?? 'span-4', index === 1 && 'wash-2']} {...extras}>
+            {item.award && <p class="award-tag">{item.award}</p>}
+            <div class="edu-head">
+              <h3>{item.title}</h3>
+              <p class="when">{item.period}</p>
+            </div>
+            <p class="meta">{item.org}</p>
+            {item.body && <p>{item.body}</p>}
+          </Tag>
+        );
+      })
     }
 
     <section id="skills" class="block span-3 block-end wash-2">
