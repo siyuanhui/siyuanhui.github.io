@@ -67,10 +67,10 @@ for (const key of required) {
 
 for (const phrase of [
   "Hi, I'm Siyuan.",
-  'Curious about how things work, and why they matter.',
+  'Orbis Non Sufficit',
   'Computer Engineering student at the University of Michigan. Exploring computer systems, semiconductors, and intelligence — with a love for music and ideas beyond engineering.',
   '你好，我是思远。',
-  '好奇事物如何运作，以及它们为何重要。',
+  '世界永不足够',
   'This is a literature review and a research plan.',
   'No model has been implemented here, and no outcome is claimed.',
   'EECS 312 · Cadence · IBM 130 nm CMOS PDK',
