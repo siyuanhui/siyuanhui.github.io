@@ -276,6 +276,21 @@ a.block:hover .meta, a.block:hover .kicker, a.block:hover .when { color: #111; }
 
 .edu, .skill-block { padding: 0.85rem 0; border-top: 3px solid var(--line); }
 .edu-head, .honor { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+.award-tag {
+  display: inline-block; width: fit-content;
+  font-family: var(--mono); font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  border: 2px solid var(--line); background: var(--yellow); color: #111;
+  padding: 0.16rem 0.45rem;
+}
+a.block:hover .award-tag { background: #111; color: var(--yellow); border-color: #111; }
+.gallery-cell { padding: 0; overflow: hidden; min-height: 18rem; }
+.gallery-cell.gallery-hero { min-height: 26rem; }
+.gallery-cell.span-12 { min-height: 24rem; }
+.gallery-cell img { width: 100%; height: 100%; object-fit: cover; display: block; flex: 1 1 auto; }
+blockquote.block { margin: 0; box-shadow: inset var(--rule) 0 0 var(--red); }
+blockquote.block p { margin: 0 0 0.35rem; font-size: 1.15rem; font-weight: 550; letter-spacing: -0.02em; line-height: 1.35; }
+blockquote.block footer { margin-top: 0.65rem; }
 .edu h3 { font-size: 1.35rem; }
 .skill-block h3 { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; }
 .page section { margin-top: 1.6rem; }
@@ -364,6 +379,9 @@ html[data-theme="dark"] .katex { color: var(--ink); }
   .board { grid-template-columns: 1fr; }
   .board > * { grid-column: 1 / -1; }
   .aside-extend { grid-row: auto; }
+  .gallery-cell,
+  .gallery-cell.gallery-hero,
+  .gallery-cell.span-12 { min-height: 0; aspect-ratio: 3 / 2; }
   .board.chips { grid-template-columns: 1fr 1fr; padding: 0; border-bottom: 0; }
   .board.chips > * { grid-column: span 1; min-height: 5.5rem; }
   .board.chips > *:last-child:nth-child(odd) { grid-column: 1 / -1; }

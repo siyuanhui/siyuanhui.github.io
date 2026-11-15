@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import { mengin } from '../data/mengin';
+import { ui } from '../i18n/ui';
+import { publicFileExists } from '../lib/files';
+import { localePath, type Locale } from '../lib/paths';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const t = ui(locale);
+const period = mengin.period[locale];
+const intro = mengin.intro[locale];
+const meta = `${mengin.org} · ${period} · ${mengin.award}`;
+const photos = mengin.photos.filter((photo) => publicFileExists(`/images/m-engin/${photo.file}`));
+---
+
+<Base locale={locale} title={t.pageTitle(mengin.title)} description={intro} unlocalizedPath="/about/m-engin/">
+  <div class="board">
+    <header class="block span-8 block-end">
+      <p class="kicker"><a href={localePath(locale, '/about/')}>{t.about}</a></p>
+      <h1>{mengin.title}</h1>
+      <p class="meta">{meta}</p>
+    </header>
+    <aside class="block span-4 wash-2 block-end">
+      <p class="award-tag">{mengin.award}</p>
+      <p class="meta">{mengin.org}</p>
+      <p class="when">{period}</p>
+    </aside>
+    <p class="block span-7 lede">{intro}</p>
+    <blockquote class="block span-5">
+      {mengin.quote.map((line) => <p>{line}</p>)}
+      <footer class="meta">{mengin.attribution}</footer>
+    </blockquote>
+    {
+      photos.map((photo) => (
+        <a
+          class:list={['block', 'gallery-cell', photos.length === 1 ? 'span-12' : photo.span, 'hero' in photo && photo.hero && 'gallery-hero']}
+          href={`/images/m-engin/${photo.file}`}
+        >
+          <img src={`/images/m-engin/${photo.file}`} alt={photo.alt[locale]} />
+        </a>
+      ))
+    }
+  </div>
+</Base>
