@@ -157,7 +157,9 @@ a.cell:hover .cell-kicker { color: #111; }
 .mondrian > .cell.wash-2 { background: var(--panel-3); }
 .cell-name h1 { font-size: clamp(3.2rem, 7vw, 6.4rem); max-width: 8ch; }
 .hero-hello { margin: 0.35rem 0 0; font-size: 1.05rem; }
-.hero-sub { margin: 0.4rem 0 0; font-size: clamp(1.15rem, 2vw, 1.55rem); font-weight: 650; letter-spacing: -0.03em; max-width: 18em; }
+.hero-motto { display: flex; flex-direction: column; align-items: flex-start; gap: 0.18rem; margin: 0.4rem 0 0; }
+.hero-sub { margin: 0; font-size: clamp(1.15rem, 2vw, 1.55rem); font-weight: 650; letter-spacing: -0.03em; line-height: 1.1; }
+.hero-sub-companion { margin: 0; font-size: clamp(0.95rem, 1.4vw, 1.15rem); font-weight: 600; letter-spacing: 0.08em; line-height: 1.35; }
 .hero-intro { margin: 0.55rem 0 0; max-width: 36rem; }
 .cell-kicker {
   font-family: var(--mono); font-size: 0.72rem; font-weight: 700;

@@ -81,7 +81,8 @@ const en = {
   backHome: 'Back home',
   heroTitle: "Hi, I'm Siyuan.",
   heroAlt: '惠思远',
-  heroSubtitle: 'Curious about how things work, and why they matter.',
+  heroSubtitle: 'Orbis Non Sufficit',
+  heroMottoCompanion: '世界永不足够',
   heroIntro:
     'Computer Engineering student at the University of Michigan. Exploring computer systems, semiconductors, and intelligence — with a love for music and ideas beyond engineering.',
   heroAffiliation: 'University of Michigan, Ann Arbor · Computer Engineering (BSE)',
@@ -197,7 +198,8 @@ const zh: typeof en = {
   backHome: '回到首页',
   heroTitle: '你好，我是思远。',
   heroAlt: 'Siyuan Hui',
-  heroSubtitle: '好奇事物如何运作，以及它们为何重要。',
+  heroSubtitle: 'Orbis Non Sufficit',
+  heroMottoCompanion: '世界永不足够',
   heroIntro:
     '密歇根大学计算机工程学生。探索计算机系统、半导体与智能——也热爱音乐和工程之外的想法。',
   heroAffiliation: '密歇根大学安娜堡分校 · 计算机工程（BSE）',
